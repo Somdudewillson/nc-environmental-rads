@@ -25,26 +25,40 @@ public class CommonProxy {
 		    
 		    System.out.println(key.getName());
 		    
+		    //==========Settings which apply to all radiation sources
 		    if (!NCERConfig.dimSpecific.environmental_radiation_enabled.containsKey(key.getName())) {
 		    	NCERConfig.dimSpecific.environmental_radiation_enabled.put(key.getName(), false);
 		    }
 		    if (!NCERConfig.dimSpecific.use_atmospheric_absorption.containsKey(key.getName())) {
 		    	NCERConfig.dimSpecific.use_atmospheric_absorption.put(key.getName(), false);
 		    }
-		    
-		    if (!NCERConfig.dimSpecific.top_height.containsKey(key.getName())) {
-		    	NCERConfig.dimSpecific.top_height.put(key.getName(), new Integer(255));
-		    }
-		    if (!NCERConfig.dimSpecific.bottom_height.containsKey(key.getName())) {
-		    	NCERConfig.dimSpecific.bottom_height.put(key.getName(), new Integer(0));
+		    if (!NCERConfig.dimSpecific.atmospheric_absorption_thickness.containsKey(key.getName())) {
+		    	NCERConfig.dimSpecific.atmospheric_absorption_thickness.put(key.getName(), new Integer(255));
 		    }
 		    
-		    if (!NCERConfig.dimSpecific.top_rads.containsKey(key.getName())) {
-		    	NCERConfig.dimSpecific.top_rads.put(key.getName(), new Double(0));
+		    //-----Sky-specific settings
+		    if (!NCERConfig.dimSpecific.sky_radiation.containsKey(key.getName())) {
+		    	NCERConfig.dimSpecific.sky_radiation.put(key.getName(), false);
 		    }
-		    if (!NCERConfig.dimSpecific.bottom_rads.containsKey(key.getName())) {
-		    	NCERConfig.dimSpecific.bottom_rads.put(key.getName(), new Double(0));
+		    if (!NCERConfig.dimSpecific.sky_max_rads.containsKey(key.getName())) {
+		    	NCERConfig.dimSpecific.sky_max_rads.put(key.getName(), new Double(0));
 		    }
+		    if (!NCERConfig.dimSpecific.sky_origin_height.containsKey(key.getName())) {
+		    	NCERConfig.dimSpecific.sky_origin_height.put(key.getName(), new Integer(255));
+		    }
+		    //-----
+		    
+		    //-----Bedrock-specific settings
+		    if (!NCERConfig.dimSpecific.bedrock_radiation.containsKey(key.getName())) {
+		    	NCERConfig.dimSpecific.bedrock_radiation.put(key.getName(), false);
+		    }
+		    if (!NCERConfig.dimSpecific.bedrock_max_rads.containsKey(key.getName())) {
+		    	NCERConfig.dimSpecific.bedrock_max_rads.put(key.getName(), new Double(0));
+		    }
+		    if (!NCERConfig.dimSpecific.bedrock_origin_height.containsKey(key.getName())) {
+		    	NCERConfig.dimSpecific.bedrock_origin_height.put(key.getName(), new Integer(0));
+		    }
+		    //-----
 		}
 		NCERConfig.updateAirAbsorption();
 		ConfigManager.sync(EnvironmentalRads.MODID, Config.Type.INSTANCE);
