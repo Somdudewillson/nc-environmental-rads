@@ -4,6 +4,8 @@ Environmental Rads is a NuclearCraft addon that adds configurable per-dimension 
 
 CurseForge Page (Recommended download location): https://www.curseforge.com/minecraft/mc-mods/environmental-rads
 
+GitHub Page of NuclearCraft: https://github.com/turbodiesel4598/NuclearCraft
+
 ## Features:
 
 * Configurable per-dimension passive radiation from the environment.
