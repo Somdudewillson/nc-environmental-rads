@@ -11,7 +11,7 @@ apply plugin: 'net.minecraftforge.gradle.forge'
 //Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
 
 
-version = "1.12.2-1.0.1.0"
+version = "1.12.2-1.0.2.0"
 group = "somdudewillson.ncenvironmentalrads" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "ncenvironmentalrads"
 
@@ -63,6 +63,7 @@ repositories {
 		// http://www.gradle.org/docs/current/userguide/dependency_management.html
 		
 		deobfCompile "nuclearcraft-mod:NuclearCraft:2.18o:1.12.2"
+		//deobfProvided "advanced-rocketry:AdvancedRocketry:AdvancedRocketry-1.12.2-1.6.0-195-universal"
 	}
 
 	processResources {

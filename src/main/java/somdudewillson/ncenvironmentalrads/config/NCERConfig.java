@@ -4,19 +4,23 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import main.java.somdudewillson.ncenvironmentalrads.EnvironmentalRads;
 import nc.config.NCConfig;
 import net.minecraftforge.common.config.Config;
 import net.minecraftforge.common.config.ConfigManager;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import main.java.somdudewillson.ncenvironmentalrads.EnvironmentalRads;
 
 @Config(modid = EnvironmentalRads.MODID, name = "NCEnvironmentalRads")
 public class NCERConfig {
 	@Config.Comment("Dimension-Specific Settings.")
 	@Config.Name("dimension-specific")
 	public static DimSettings dimSpecific = new DimSettings();
+	
+	@Config.Comment("Advanced Rocketry Compatibility Settings.")
+	@Config.Name("ar-compat")
+	public static ARSettings arSettings = new ARSettings();
 	
 	//Global Settings
 	@Config.Comment("Percentage of incoming radiation that a block will absorb per unit of hardness it has.")
@@ -67,6 +71,32 @@ public class NCERConfig {
 		
 		@Config.Ignore
 		public final Map<String, Double> air_absorption = new HashMap<>();
+	}
+	
+	//Advanced Rocketry Compat Settings
+	public static class ARSettings {
+		@Config.Comment({"If sky radiation should be calculated from the distance from the star.",
+		"If set to true, all relevant per-dimension radiation amount settings will be overridden."})
+		public boolean solar_radiation_origin = false;
+		
+		@Config.Comment({"How much the automatic radiation from stars should be scaled.",
+		"1.0 = 100%"})
+		public double solar_radiation_scale = 1.0;
+		
+		@Config.Comment({"How many samples should be used to calculate the radiation amount from stars.",
+		"Highly recommended to not reduce below 100."})
+		public int solar_radiation_sampling = 1000;
+		
+		@Config.Comment({"How much the automatic radiation from black holes should be scaled.",
+		"1.0 = 100%"})
+		public double accretion_radiation_scale = 1.0;
+		
+		@Config.Comment({"If atmospheric density curves or flat planetary atmospheric density should be used."})
+		public boolean use_atmosphere_density_curve = false;
+		
+		@Config.Comment({"Absorption % per block of air at 1 atm for each atmosphere type.",
+			"-1 will use calculated values for the overworld."})
+		public final Map<String, Double> atmosphere_type_absorption = new HashMap<>();
 	}
 
 

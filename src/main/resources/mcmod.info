@@ -4,11 +4,11 @@
 	"description": "An addon for NuclearCraft which allows per-dimension passive radiation from the environment.",
 	"version": "${version}",
 	"mcversion": "${mcversion}",
-	"url": "",
+	"url": "https://www.curseforge.com/minecraft/mc-mods/environmental-rads",
 	"authorList": ["somdudewillson"],
 	"credits": "Thanks to the original author of NuclearCraft!",
-	"logoFile": "",
+	"logoFile": "EnvRads_SpashImg.png",
 	"screenshots": [],
 	"requiredMods": ["nuclearcraft"],
-	"dependencies": ["nuclearcraft"]
+	"dependencies": ["nuclearcraft","advancedrocketry"]
 }]
