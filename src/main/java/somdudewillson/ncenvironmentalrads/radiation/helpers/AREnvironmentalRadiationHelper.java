@@ -64,6 +64,8 @@ public class AREnvironmentalRadiationHelper implements
 			air_absorption = 0.0;
 		}
 		
+		air_absorption = Math.max(air_absorption,0.0);
+		
 		if (!NCERConfig.arSettings.use_atmosphere_density_curve) {
 			//If player has LoS to the sky, no occlusion checks are necessary
 			if (world.canSeeSky(pos)) {
@@ -71,6 +73,8 @@ public class AREnvironmentalRadiationHelper implements
 						(galaxy.isDimensionCreated(dimID) ?
 								galaxy.getDimensionProperties(dimID).getAtmosphereDensity() :
 								1.0);
+				
+				adjusted_air_absorption = Math.max(adjusted_air_absorption,0.0);
 				
 				return top_rads * Math.pow((1-adjusted_air_absorption), (top_height-pos.getY()));
 			}
@@ -83,6 +87,8 @@ public class AREnvironmentalRadiationHelper implements
 		BlockPos projectPos = new BlockPos(pos.getX(), top_height-1, pos.getZ());
 		double remainingRads = top_rads;
 		if (!NCERConfig.arSettings.use_atmosphere_density_curve) {
+			air_absorption = getAirAbsorption(top_height, world);
+			
 			int startingHeight = world.getHeight(pos.getX(), pos.getZ());
 			int airLayers = Math.max((top_height-startingHeight),0);
 			
@@ -304,7 +310,7 @@ public class AREnvironmentalRadiationHelper implements
 			air_density = 1;
 		}
 		
-		return base_absorption*air_density;
+		return Math.max(base_absorption*air_density, 0.0);
 	}
 	//==========
 }

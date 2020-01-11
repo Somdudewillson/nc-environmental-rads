@@ -37,6 +37,8 @@ public class DefaultEnvironmentalRadiationHelper implements
 				NCERConfig.dimSpecific.air_absorption.get(dimKey) :
 				0.0;
 		
+		air_absorption = Math.max(air_absorption,0.0);
+		
 		//If player has LoS to the sky, no occlusion checks are necessary
 		if (world.canSeeSky(pos)) {
 			return top_rads * Math.pow((1-air_absorption), (top_height-pos.getY()));
