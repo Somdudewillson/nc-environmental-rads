@@ -15,6 +15,8 @@ import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.common.config.Config;
 import net.minecraftforge.common.config.ConfigManager;
 
+import org.apache.logging.log4j.Logger;
+
 public class AREnvironmentalRadiationHelper implements
 		IEnvironmentalRadiationHelper {
 	
@@ -26,6 +28,8 @@ public class AREnvironmentalRadiationHelper implements
 	//private static final double Boltzmanns_constant = 0.0000000000000000000000138;//k
 	
 	private static final double gravitational_constant = 6.674*Math.pow(10, -11);
+	
+	private Logger log = EnvironmentalRads.logger;
 	
 	@Override
 	public double getRadsFromSky(BlockPos pos, World world, String dimKey) {
@@ -126,28 +130,29 @@ public class AREnvironmentalRadiationHelper implements
 		Chunk thisChunk = world.getChunkFromBlockCoords(pos);
 		//-----
 		
-		@SuppressWarnings("unused")
 		String debugStack = "\n----------\n";
 		debugStack += "Direction: "+direction+"\n";
 		debugStack += "Top block: "+startingHeight+"\n";
+		debugStack += "Initial rads: "+rads+"\n";
 		
 		for (BlockPos testPos = pos;
 				testPos.getY()!=targetPos.getY();testPos = testPos.offset(direction)) {
 			
 			debugStack += "\tLayer "+testPos.getY()+" ";
-			debugStack += "["+thisChunk.getBlockState(testPos).getBlock().getLocalizedName()+"] (";
+			debugStack += "["+thisChunk.getBlockState(testPos).getBlock().getLocalizedName()+"] ";
 			
 			if (thisChunk.getBlockState(testPos).getMaterial() == Material.AIR) {
 				//If it's air, apply air absorption
 				air_absorption = getAirAbsorption(testPos.getY(), world);
-				debugStack += (air_absorption*100);
+				debugStack += "("+(air_absorption*100);
 				rads *= 1-air_absorption;
 			} else {
 				double blockAbsorption = Math.max(
 						0,
 						thisChunk.getBlockState(testPos).getBlockHardness(world, testPos)*percent_absorbed_per_hardness);
-				debugStack += 100*blockAbsorption;
-				rads *= 1-(thisChunk.getBlockState(testPos).getBlockHardness(world, testPos)*percent_absorbed_per_hardness);
+				debugStack += "{hardness "+thisChunk.getBlockState(testPos).getBlockHardness(world, testPos)+"} = ";
+				debugStack += "("+(100*blockAbsorption);
+				rads *= 1-(blockAbsorption);
 			}
 			debugStack += "%): "+rads+" rads\n";
 			
@@ -160,7 +165,7 @@ public class AREnvironmentalRadiationHelper implements
 		}
 		debugStack += "\tFinal Rads: "+rads+"\n";
 		debugStack += "====";
-		//System.out.println(debugStack);
+		if (NCERConfig.debug_output) { log.debug(debugStack); }
 		
 		return rads;
 	}

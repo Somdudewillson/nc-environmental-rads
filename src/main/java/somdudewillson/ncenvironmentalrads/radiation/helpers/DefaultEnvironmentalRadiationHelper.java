@@ -1,5 +1,7 @@
 package main.java.somdudewillson.ncenvironmentalrads.radiation.helpers;
 
+import org.apache.logging.log4j.Logger;
+
 import nc.config.NCConfig;
 import net.minecraft.block.material.Material;
 import net.minecraft.util.EnumFacing;
@@ -15,6 +17,8 @@ public class DefaultEnvironmentalRadiationHelper implements
 		IEnvironmentalRadiationHelper {
 	
 	private static final double percent_absorbed_per_hardness = NCERConfig.percent_absorbed_per_hardness;
+	
+	private Logger log = EnvironmentalRads.logger;
 
 	@Override
 	public double getRadsFromSky(BlockPos pos, World world, String dimKey) {
@@ -89,27 +93,28 @@ public class DefaultEnvironmentalRadiationHelper implements
 		Chunk thisChunk = world.getChunkFromBlockCoords(pos);
 		//-----
 		
-		@SuppressWarnings("unused")
 		String debugStack = "\n----------\n";
 		debugStack += "Direction: "+direction+"\n";
 		debugStack += "Top block: "+startingHeight+"\n";
+		debugStack += "Initial rads: "+rads+"\n";
 		
 		for (BlockPos testPos = pos;
 				testPos.getY()!=targetPos.getY();testPos = testPos.offset(direction)) {
 			
 			debugStack += "\tLayer "+testPos.getY()+" ";
-			debugStack += "["+thisChunk.getBlockState(testPos).getBlock().getLocalizedName()+"] (";
+			debugStack += "["+thisChunk.getBlockState(testPos).getBlock().getLocalizedName()+"] ";
 			
 			if (thisChunk.getBlockState(testPos).getMaterial() == Material.AIR) {
 				//If it's air, apply air absorption
-				debugStack += (air_absorption*100);
+				debugStack += "("+(air_absorption*100);
 				rads *= 1-air_absorption;
 			} else {
 				double blockAbsorption = Math.max(
 						0,
 						thisChunk.getBlockState(testPos).getBlockHardness(world, testPos)*percent_absorbed_per_hardness);
-				debugStack += 100*blockAbsorption;
-				rads *= 1-(thisChunk.getBlockState(testPos).getBlockHardness(world, testPos)*percent_absorbed_per_hardness);
+				debugStack += "{hardness "+thisChunk.getBlockState(testPos).getBlockHardness(world, testPos)+"} = ";
+				debugStack += "("+(100*blockAbsorption);
+				rads *= 1-(blockAbsorption);
 			}
 			debugStack += "%): "+rads+" rads\n";
 			
@@ -122,7 +127,7 @@ public class DefaultEnvironmentalRadiationHelper implements
 		}
 		debugStack += "\tFinal Rads: "+rads+"\n";
 		debugStack += "====";
-		//System.out.println(debugStack);
+		if (NCERConfig.debug_output) { log.debug(debugStack); }
 		
 		return rads;
 	}

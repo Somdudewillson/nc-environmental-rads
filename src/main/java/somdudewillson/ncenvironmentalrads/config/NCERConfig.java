@@ -27,6 +27,9 @@ public class NCERConfig {
 	@Config.Name("% absorption per hardness")
 	public static double percent_absorbed_per_hardness = 0.01;
 	
+	@Config.Comment("If detailed debug logging outputs are enabled.  Only use for bug reports and similar.")
+	public static boolean debug_output = false;
+	
 	//Dimension-Specific Settings
 	public static class DimSettings {
 		@Config.Comment({"If dimensions will have environmental radiation.",
