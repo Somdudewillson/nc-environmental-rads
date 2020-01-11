@@ -35,7 +35,8 @@ public class EnvironmentalRadiationHandler {
 			EntityPlayerMP player = (EntityPlayerMP)event.player;
 			String dimKey = player.world.provider.getDimensionType().getName();
 			//If environmental radiation is disabled in the current dimension, skip calculations
-			if (!NCERConfig.dimSpecific.environmental_radiation_enabled.get(dimKey)) { return; }
+			if (NCERConfig.dimSpecific.environmental_radiation_enabled.containsKey(dimKey) &&
+					!NCERConfig.dimSpecific.environmental_radiation_enabled.get(dimKey)) { return; }
 			
 			IEntityRads playerRads = RadiationHelper.getEntityRadiation(player);
 			

@@ -28,6 +28,9 @@ public class AREnvironmentalRadiationHelper implements
 	public double getRadsFromSky(BlockPos pos, World world, String dimKey) {
 		int dimID = world.provider.getDimension();
 		IGalaxy galaxy = AdvancedRocketryAPI.dimensionManager;
+		dimKey = NCERConfig.dimSpecific.environmental_radiation_enabled.containsKey(dimKey) ? 
+			dimKey : "overworld";
+		
 		double top_rads;
 		if (NCERConfig.arSettings.solar_radiation_origin && galaxy.isDimensionCreated(dimID)) {
 			top_rads = getRadsFromSystemStar(galaxy.getDimensionProperties(dimID));
@@ -85,6 +88,9 @@ public class AREnvironmentalRadiationHelper implements
 
 	@Override
 	public double getRadsFromBedrock(BlockPos pos, World world, String dimKey) {
+		dimKey = NCERConfig.dimSpecific.environmental_radiation_enabled.containsKey(dimKey) ? 
+				dimKey : "overworld";
+		
 		double top_rads = NCERConfig.dimSpecific.bedrock_max_rads.get(dimKey);
 		int bottom_height = NCERConfig.dimSpecific.bedrock_origin_height.get(dimKey);
 		
@@ -226,6 +232,8 @@ public class AREnvironmentalRadiationHelper implements
 			}
 		} else {
 			String dimKey = world.provider.getDimensionType().getName();
+			dimKey = NCERConfig.dimSpecific.environmental_radiation_enabled.containsKey(dimKey) ? 
+					dimKey : "overworld";
 			base_absorption = NCERConfig.dimSpecific.air_absorption.get(dimKey);
 			air_density = 1;
 		}
