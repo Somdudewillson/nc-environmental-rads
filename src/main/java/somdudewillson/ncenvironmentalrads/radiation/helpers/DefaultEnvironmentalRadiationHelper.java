@@ -6,6 +6,9 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
+import net.minecraftforge.common.config.Config;
+import net.minecraftforge.common.config.ConfigManager;
+import main.java.somdudewillson.ncenvironmentalrads.EnvironmentalRads;
 import main.java.somdudewillson.ncenvironmentalrads.config.NCERConfig;
 
 public class DefaultEnvironmentalRadiationHelper implements
@@ -122,6 +125,52 @@ public class DefaultEnvironmentalRadiationHelper implements
 		//System.out.println(debugStack);
 		
 		return rads;
+	}
+
+	@Override
+	public boolean tryAddNewDimension(World world) {
+		String key = world.provider.getDimensionType().getName();
+		if (key.length() < 1) { return false;}
+		
+		//-----Settings which apply to all radiation sources
+	    if (!NCERConfig.dimSpecific.environmental_radiation_enabled.containsKey(key)) {
+	    	NCERConfig.dimSpecific.environmental_radiation_enabled.put(key, false);
+	    }
+	    if (!NCERConfig.dimSpecific.use_atmospheric_absorption.containsKey(key)) {
+	    	NCERConfig.dimSpecific.use_atmospheric_absorption.put(key, false);
+	    }
+	    if (!NCERConfig.dimSpecific.atmospheric_absorption_thickness.containsKey(key)) {
+	    	NCERConfig.dimSpecific.atmospheric_absorption_thickness.put(key, new Integer(255));
+	    }
+	    //-----
+	    
+	    //-----Sky-specific settings
+	    if (!NCERConfig.dimSpecific.sky_radiation.containsKey(key)) {
+	    	NCERConfig.dimSpecific.sky_radiation.put(key, false);
+	    }
+	    if (!NCERConfig.dimSpecific.sky_max_rads.containsKey(key)) {
+	    	NCERConfig.dimSpecific.sky_max_rads.put(key, new Double(0));
+	    }
+	    if (!NCERConfig.dimSpecific.sky_origin_height.containsKey(key)) {
+	    	NCERConfig.dimSpecific.sky_origin_height.put(key, new Integer(255));
+	    }
+	    //-----
+	    
+	    //-----Bedrock-specific settings
+	    if (!NCERConfig.dimSpecific.bedrock_radiation.containsKey(key)) {
+	    	NCERConfig.dimSpecific.bedrock_radiation.put(key, false);
+	    }
+	    if (!NCERConfig.dimSpecific.bedrock_max_rads.containsKey(key)) {
+	    	NCERConfig.dimSpecific.bedrock_max_rads.put(key, new Double(0));
+	    }
+	    if (!NCERConfig.dimSpecific.bedrock_origin_height.containsKey(key)) {
+	    	NCERConfig.dimSpecific.bedrock_origin_height.put(key, new Integer(0));
+	    }
+	    //-----
+		NCERConfig.updateAirAbsorption();
+		ConfigManager.sync(EnvironmentalRads.MODID, Config.Type.INSTANCE);
+		
+		return true;
 	}
 
 }

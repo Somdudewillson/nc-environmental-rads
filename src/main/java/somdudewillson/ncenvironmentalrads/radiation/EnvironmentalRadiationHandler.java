@@ -1,6 +1,10 @@
 package main.java.somdudewillson.ncenvironmentalrads.radiation;
 
 import static nc.config.NCConfig.radiation_player_tick_rate;
+
+import org.apache.logging.log4j.Logger;
+
+import main.java.somdudewillson.ncenvironmentalrads.EnvironmentalRads;
 import main.java.somdudewillson.ncenvironmentalrads.config.NCERConfig;
 import main.java.somdudewillson.ncenvironmentalrads.radiation.helpers.IEnvironmentalRadiationHelper;
 import nc.capability.radiation.entity.IEntityRads;
@@ -38,6 +42,15 @@ public class EnvironmentalRadiationHandler {
 			if (NCERConfig.dimSpecific.environmental_radiation_enabled.containsKey(dimKey) &&
 					!NCERConfig.dimSpecific.environmental_radiation_enabled.get(dimKey)) { return; }
 			
+			Logger log = EnvironmentalRads.logger;
+			
+			//Add missing dimensions
+			if (!NCERConfig.dimSpecific.environmental_radiation_enabled.containsKey(dimKey)) {
+				log.warn("Unregistered Dimension Encountered, attemting auto-register...");
+				boolean success = helper.tryAddNewDimension(player.world);
+				log.warn(success ? "Auto-registry succeeded." : "Auto-registry failed.");
+			}
+			
 			IEntityRads playerRads = RadiationHelper.getEntityRadiation(player);
 			
 			double calculatedRads = getRadsAtPos(player.getPosition(), player.world, dimKey);
@@ -50,6 +63,8 @@ public class EnvironmentalRadiationHandler {
 	
 	private double getRadsAtPos(BlockPos pos, World world, String dimKey) {
 		double rads = 0.0;
+		dimKey = NCERConfig.dimSpecific.environmental_radiation_enabled.containsKey(dimKey) ? 
+			dimKey : "overworld";
 		
 		if (NCERConfig.dimSpecific.sky_radiation.get(dimKey)) {//If sky radiation is enabled, calculate it
 			rads += helper.getRadsFromSky(pos, world, dimKey);

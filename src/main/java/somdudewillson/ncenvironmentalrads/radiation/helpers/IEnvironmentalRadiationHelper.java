@@ -10,4 +10,6 @@ public interface IEnvironmentalRadiationHelper {
 	public double projectRadsFromPoint(BlockPos pos, EnumFacing direction, double sourceRads,
 			World world, BlockPos targetPos,
 			double air_absorption, double bottom_rads);
+	
+	public boolean tryAddNewDimension(World world);
 }

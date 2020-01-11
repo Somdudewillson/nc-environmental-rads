@@ -60,48 +60,48 @@ public class CommonProxy {
 	}
 	
 	private void updateDimensions() {
+	    log.info("Auto-Detecting Dimensions...");
 		for (Entry<DimensionType, IntSortedSet> entry : DimensionManager.getRegisteredDimensions().entrySet()) {
-		    DimensionType key = entry.getKey();
+		    String key = entry.getKey().getName();
 		    
-		    log.debug("Auto-Detecting Dimensions...");
-		    log.debug("Detected Dimension: "+key.getName());
-		    log.debug("Dimension Auto-Detecting Done.");
+		    log.info("Detected Dimension: "+key);
 		    
 		    //==========Settings which apply to all radiation sources
-		    if (!NCERConfig.dimSpecific.environmental_radiation_enabled.containsKey(key.getName())) {
-		    	NCERConfig.dimSpecific.environmental_radiation_enabled.put(key.getName(), false);
+		    if (!NCERConfig.dimSpecific.environmental_radiation_enabled.containsKey(key)) {
+		    	NCERConfig.dimSpecific.environmental_radiation_enabled.put(key, false);
 		    }
-		    if (!NCERConfig.dimSpecific.use_atmospheric_absorption.containsKey(key.getName())) {
-		    	NCERConfig.dimSpecific.use_atmospheric_absorption.put(key.getName(), false);
+		    if (!NCERConfig.dimSpecific.use_atmospheric_absorption.containsKey(key)) {
+		    	NCERConfig.dimSpecific.use_atmospheric_absorption.put(key, false);
 		    }
-		    if (!NCERConfig.dimSpecific.atmospheric_absorption_thickness.containsKey(key.getName())) {
-		    	NCERConfig.dimSpecific.atmospheric_absorption_thickness.put(key.getName(), new Integer(255));
+		    if (!NCERConfig.dimSpecific.atmospheric_absorption_thickness.containsKey(key)) {
+		    	NCERConfig.dimSpecific.atmospheric_absorption_thickness.put(key, new Integer(255));
 		    }
 		    
 		    //-----Sky-specific settings
-		    if (!NCERConfig.dimSpecific.sky_radiation.containsKey(key.getName())) {
-		    	NCERConfig.dimSpecific.sky_radiation.put(key.getName(), false);
+		    if (!NCERConfig.dimSpecific.sky_radiation.containsKey(key)) {
+		    	NCERConfig.dimSpecific.sky_radiation.put(key, false);
 		    }
-		    if (!NCERConfig.dimSpecific.sky_max_rads.containsKey(key.getName())) {
-		    	NCERConfig.dimSpecific.sky_max_rads.put(key.getName(), new Double(0));
+		    if (!NCERConfig.dimSpecific.sky_max_rads.containsKey(key)) {
+		    	NCERConfig.dimSpecific.sky_max_rads.put(key, new Double(0));
 		    }
-		    if (!NCERConfig.dimSpecific.sky_origin_height.containsKey(key.getName())) {
-		    	NCERConfig.dimSpecific.sky_origin_height.put(key.getName(), new Integer(255));
+		    if (!NCERConfig.dimSpecific.sky_origin_height.containsKey(key)) {
+		    	NCERConfig.dimSpecific.sky_origin_height.put(key, new Integer(255));
 		    }
 		    //-----
 		    
 		    //-----Bedrock-specific settings
-		    if (!NCERConfig.dimSpecific.bedrock_radiation.containsKey(key.getName())) {
-		    	NCERConfig.dimSpecific.bedrock_radiation.put(key.getName(), false);
+		    if (!NCERConfig.dimSpecific.bedrock_radiation.containsKey(key)) {
+		    	NCERConfig.dimSpecific.bedrock_radiation.put(key, false);
 		    }
-		    if (!NCERConfig.dimSpecific.bedrock_max_rads.containsKey(key.getName())) {
-		    	NCERConfig.dimSpecific.bedrock_max_rads.put(key.getName(), new Double(0));
+		    if (!NCERConfig.dimSpecific.bedrock_max_rads.containsKey(key)) {
+		    	NCERConfig.dimSpecific.bedrock_max_rads.put(key, new Double(0));
 		    }
-		    if (!NCERConfig.dimSpecific.bedrock_origin_height.containsKey(key.getName())) {
-		    	NCERConfig.dimSpecific.bedrock_origin_height.put(key.getName(), new Integer(0));
+		    if (!NCERConfig.dimSpecific.bedrock_origin_height.containsKey(key)) {
+		    	NCERConfig.dimSpecific.bedrock_origin_height.put(key, new Integer(0));
 		    }
 		    //-----
 		}
+	    log.info("Dimension Auto-Detecting Done.");
 		NCERConfig.updateAirAbsorption();
 	}
 
