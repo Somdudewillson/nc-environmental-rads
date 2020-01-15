@@ -33,7 +33,8 @@ public class EnvironmentalRadiationHandler {
 		if (!NCConfig.radiation_enabled_public) { return; }
 		
 		if (event.phase != TickEvent.Phase.START ||
-				((event.player.world.getTotalWorldTime() + event.player.getUniqueID().hashCode()) % radiation_player_tick_rate) != 0) { return; }
+				((event.player.world.getTotalWorldTime() + event.player.getUniqueID().hashCode()) % 
+						radiation_player_tick_rate) != 0) { return; }
 		
 		if (event.side == Side.SERVER && event.player instanceof EntityPlayerMP) {			
 			EntityPlayerMP player = (EntityPlayerMP)event.player;
