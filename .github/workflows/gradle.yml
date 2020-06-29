@@ -25,4 +25,4 @@ jobs:
     - name: Setup ForgeGradle workspace
       run: ./gradlew setupCiWorkspace
     - name: Build with Gradle
-      run: ./gradlew build
+      run: ./gradlew buildNeeded
