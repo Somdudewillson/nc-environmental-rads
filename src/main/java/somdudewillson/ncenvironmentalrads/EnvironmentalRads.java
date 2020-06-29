@@ -1,5 +1,8 @@
 package main.java.somdudewillson.ncenvironmentalrads;
 
+import main.java.somdudewillson.ncenvironmentalrads.commands.BiomeConfigCommand;
+import main.java.somdudewillson.ncenvironmentalrads.commands.BlockConfigCommand;
+import main.java.somdudewillson.ncenvironmentalrads.commands.DimensionConfigCommand;
 import main.java.somdudewillson.ncenvironmentalrads.proxy.CommonProxy;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
@@ -8,6 +11,7 @@ import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 
 import org.apache.logging.log4j.Logger;
 
@@ -31,7 +35,7 @@ public class EnvironmentalRads
 	 * 		MINOR
 	 * Adding items, blocks, tile entities, etc.
 	 * Adding new mechanics.
-	 * Deprecating public methods. (This is not a MAJORAPI increment since it doesn’t break an API.)
+	 * Deprecating public methods. (This is not a MAJORAPI increment since it doesn't break an API.)
 	 * 		PATCH
 	 * Bugfixes.
      */
@@ -65,5 +69,13 @@ public class EnvironmentalRads
 		logger.info("Postinit Started...");
 		proxy.setLogger(logger);
 		proxy.postInit(postEvent);
+	}
+	
+	@EventHandler
+	public void serverLoad(FMLServerStartingEvent event) {
+	    // register server commands
+		event.registerServerCommand(new BlockConfigCommand());
+		event.registerServerCommand(new BiomeConfigCommand());
+		event.registerServerCommand(new DimensionConfigCommand());
 	}
 }

@@ -39,22 +39,29 @@ public class EnvironmentalRadiationHandler {
 		if (event.side == Side.SERVER && event.player instanceof EntityPlayerMP) {			
 			EntityPlayerMP player = (EntityPlayerMP)event.player;
 			String dimKey = player.world.provider.getDimensionType().getName();
-			//If environmental radiation is disabled in the current dimension, skip calculations
-			if (NCERConfig.dimSpecific.environmental_radiation_enabled.containsKey(dimKey) &&
-					!NCERConfig.dimSpecific.environmental_radiation_enabled.get(dimKey)) { return; }
+			String biomeKey = player.world.getBiome(event.player.getPosition()).getBiomeName();
 			
 			Logger log = EnvironmentalRads.logger;
 			
 			//Add missing dimensions
 			if (!NCERConfig.dimSpecific.environmental_radiation_enabled.containsKey(dimKey)) {
-				log.warn("Unregistered Dimension Encountered, attemting auto-register...");
+				log.warn("Unregistered Dimension Encountered, attemting auto-register of "+dimKey+"...");
 				boolean success = helper.tryAddNewDimension(player.world);
 				log.warn(success ? "Auto-registry succeeded." : "Auto-registry failed.");
 			}
+			//Add missing biomes
+			if (!NCERConfig.biomeSpecific.biome_effects_enabled.containsKey(biomeKey)) {
+				log.warn("Unregistered Biome Encountered, attemting auto-register of "+biomeKey+"...");
+				boolean success = helper.tryAddNewBiome(player.world, player.getPosition());
+				log.warn(success ? "Auto-registry succeeded." : "Auto-registry failed.");
+			}
+			
+			//If environmental radiation is disabled in the current dimension, skip calculations
+			if (!NCERConfig.dimSpecific.environmental_radiation_enabled.getOrDefault(dimKey, false)) { return; }
 			
 			IEntityRads playerRads = RadiationHelper.getEntityRadiation(player);
 			
-			double calculatedRads = getRadsAtPos(player.getPosition(), player.world, dimKey);
+			double calculatedRads = getRadsAtPos(player.getPosition(), player.world, dimKey, biomeKey);
 			double appliedRads = RadiationHelper.addRadsToEntity(playerRads, player, calculatedRads, false, false, radiation_player_tick_rate);
 			playerRads.setRadiationLevel(playerRads.getRadiationLevel() + appliedRads);
 			
@@ -62,16 +69,16 @@ public class EnvironmentalRadiationHandler {
 		}
 	}
 	
-	private double getRadsAtPos(BlockPos pos, World world, String dimKey) {
+	private double getRadsAtPos(BlockPos pos, World world, String dimKey, String biomeKey) {
 		double rads = 0.0;
 		dimKey = NCERConfig.dimSpecific.environmental_radiation_enabled.containsKey(dimKey) ? 
 			dimKey : "overworld";
 		
 		if (NCERConfig.dimSpecific.sky_radiation.get(dimKey)) {//If sky radiation is enabled, calculate it
-			rads += helper.getRadsFromSky(pos, world, dimKey);
+			rads += helper.getRadsFromSky(pos, world, dimKey, biomeKey);
 		}
 		if (NCERConfig.dimSpecific.bedrock_radiation.get(dimKey)) {//If bedrock radiation is enabled, calculate it
-			rads += helper.getRadsFromBedrock(pos, world, dimKey);
+			rads += helper.getRadsFromBedrock(pos, world, dimKey, biomeKey);
 		}
 		
 		return rads;

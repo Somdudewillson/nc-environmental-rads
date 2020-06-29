@@ -13,6 +13,8 @@ import main.java.somdudewillson.ncenvironmentalrads.radiation.EnvironmentalRadia
 import main.java.somdudewillson.ncenvironmentalrads.radiation.helpers.DefaultEnvironmentalRadiationHelper;
 import main.java.somdudewillson.ncenvironmentalrads.radiation.helpers.IEnvironmentalRadiationHelper;
 import net.minecraft.world.DimensionType;
+import net.minecraftforge.common.BiomeManager;
+import net.minecraftforge.common.BiomeManager.BiomeEntry;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Config;
@@ -28,6 +30,7 @@ public class CommonProxy {
 		
 		//Register dimensions in config
 		updateDimensions();
+		updateBiomes();
 		
 		//-----Compatibilities
 		ICompatConfigLoader loader;
@@ -103,6 +106,43 @@ public class CommonProxy {
 		}
 	    log.info("Dimension Auto-Detecting Done.");
 		NCERConfig.updateAirAbsorption();
+	}
+	
+	private void updateBiomes() {
+		log.info("Auto-Detecting Biomes...");
+		for (BiomeManager.BiomeType type : BiomeManager.BiomeType.values()) {
+			log.info("Scanning Biomes of Type: "+type);
+			
+			for (BiomeEntry entry : BiomeManager.getBiomes(type)) {
+			    String key = entry.biome.getBiomeName();
+			    
+			    log.info("Detected Biome: "+key);
+			    
+			    //==========Settings which apply to all radiation sources
+			    if (!NCERConfig.biomeSpecific.biome_effects_enabled.containsKey(key)) {
+			    	NCERConfig.biomeSpecific.biome_effects_enabled.put(key, false);
+			    }
+			    
+			    //-----Sky-specific settings
+			    if (!NCERConfig.biomeSpecific.sky_multiplier.containsKey(key)) {
+			    	NCERConfig.biomeSpecific.sky_multiplier.put(key, new Double(1));
+			    }
+			    if (!NCERConfig.biomeSpecific.sky_shift.containsKey(key)) {
+			    	NCERConfig.biomeSpecific.sky_shift.put(key, new Double(0));
+			    }
+			    //-----
+			    
+			    //-----Bedrock-specific settings
+			    if (!NCERConfig.biomeSpecific.bedrock_multiplier.containsKey(key)) {
+			    	NCERConfig.biomeSpecific.bedrock_multiplier.put(key, new Double(1));
+			    }
+			    if (!NCERConfig.biomeSpecific.bedrock_shift.containsKey(key)) {
+			    	NCERConfig.biomeSpecific.bedrock_shift.put(key, new Double(0));
+			    }
+			    //-----
+			}
+		}
+	    log.info("Biome Auto-Detecting Done.");
 	}
 
 	public void setLogger(Logger logger) {

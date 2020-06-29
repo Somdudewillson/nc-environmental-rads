@@ -21,7 +21,7 @@ public class RadiationCycleData extends WorldSavedData {
 	}
 
     public static RadiationCycleData get(World world) {
-        MapStorage storage = world.getMapStorage();
+        MapStorage storage = world.getPerWorldStorage();
         instance = (RadiationCycleData) storage.getOrLoadData(RadiationCycleData.class, DATA_NAME);
 
         if (instance == null) {

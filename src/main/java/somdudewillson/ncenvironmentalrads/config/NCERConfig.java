@@ -14,21 +14,37 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 @Config(modid = EnvironmentalRads.MODID, name = "NCEnvironmentalRads")
 public class NCERConfig {
+	@Config.Comment("Block Settings.")
+	@Config.Name("block-specific")
+	public static BlockSettings blockSettings = new BlockSettings();
+	
 	@Config.Comment("Dimension-Specific Settings.")
 	@Config.Name("dimension-specific")
 	public static DimSettings dimSpecific = new DimSettings();
+	
+	@Config.Comment("Biome-Specific Settings.")
+	@Config.Name("biome-specific")
+	public static BiomeSettings biomeSpecific = new BiomeSettings();
 	
 	@Config.Comment("Advanced Rocketry Compatibility Settings.")
 	@Config.Name("ar-compat")
 	public static ARSettings arSettings = new ARSettings();
 	
 	//Global Settings
-	@Config.Comment("Percentage of incoming radiation that a block will absorb per unit of hardness it has.")
+	@Config.Comment({"Percentage of incoming radiation that a block will absorb per unit of hardness it has.",
+			"Will be overridden by per-block settings."})
 	@Config.Name("% absorption per hardness")
 	public static double percent_absorbed_per_hardness = 0.01;
 	
 	@Config.Comment("If detailed debug logging outputs are enabled.  Only use for bug reports and similar.")
 	public static boolean debug_output = false;
+	
+	//Block-Specific Absorption Settings
+	public static class BlockSettings {
+		@Config.Comment({"Percentage of incoming radiation that a block will absorb.",
+		"Any block not present here will have its value calculated automatically."})
+		public final Map<String, Double> rad_absorption = new HashMap<>();
+	}
 	
 	//Dimension-Specific Settings
 	public static class DimSettings {
@@ -67,13 +83,41 @@ public class NCERConfig {
 			"Will be ignored if radiation from the bedrock is disabled."})
 		public final Map<String, Double> bedrock_max_rads = new HashMap<>();
 	
-		@Config.Comment({"The height at which sky-sourced radiation is at its full value.",
+		@Config.Comment({"The height at which bedrock-sourced radiation is at its full value.",
 			"Will be ignored if radiation from the bedrock is disabled."})
 		public final Map<String, Integer> bedrock_origin_height = new HashMap<>();
 		//-----
 		
 		@Config.Ignore
 		public final Map<String, Double> air_absorption = new HashMap<>();
+	}
+	
+	//Biome-Specific Settings
+	public static class BiomeSettings {
+		@Config.Comment({"If biomes will have altered environmental radiation.",
+		"If set to false, all other values will be ignored."})
+		public final Map<String, Boolean> biome_effects_enabled = new HashMap<>();
+		
+		//-----Sky-related settings
+		@Config.Comment({"The multiplier for sky-originating radiation.",
+			"1.0 is equivalent to no multiplier."})
+		public final Map<String, Double> sky_multiplier = new HashMap<>();
+		
+		@Config.Comment({"The +/- shift for sky-originating radiation.",
+			"Negative shift values are calculated before the multiplier, and positive ones are calculated after.",
+			"0 is equivalent to no shift."})
+		public final Map<String, Double> sky_shift = new HashMap<>();
+		//-----
+		
+		//-----Bedrock-related Settings
+		@Config.Comment({"The multiplier for bedrock-originating radiation.",
+			"1.0 is equivalent to no multiplier."})
+		public final Map<String, Double> bedrock_multiplier = new HashMap<>();
+		
+		@Config.Comment({"The +/- shift for bedrock-originating radiation.",
+			"Negative shift values are calculated before the multiplier, and positive ones are calculated after.",
+			"0 is equivalent to no shift."})
+		public final Map<String, Double> bedrock_shift = new HashMap<>();
 	}
 	
 	//Advanced Rocketry Compat Settings
@@ -95,15 +139,12 @@ public class NCERConfig {
 		"1.0 = 100%"})
 		public double accretion_radiation_scale = 1.0;
 		
-		@Config.Comment({"If atmospheric density curves or flat planetary atmospheric density should be used."})
-		public boolean use_atmosphere_density_curve = false;
-		
 		@Config.Comment({"Absorption % per block of air at 1 atm for each atmosphere type.",
 			"-1 will use calculated values for the overworld."})
 		public final Map<String, Double> atmosphere_type_absorption = new HashMap<>();
 	}
 
-
+	
 	@Mod.EventBusSubscriber(modid = EnvironmentalRads.MODID)
 	private static class EventHandler {
 
@@ -123,8 +164,14 @@ public class NCERConfig {
 	
 	public static void updateAirAbsorption() {
 		
+		//Recalculate Per-dimension 
 		for (Entry<String, Boolean> entry : dimSpecific.environmental_radiation_enabled.entrySet()) {
 			String key = entry.getKey();
+			
+			if (!dimSpecific.environmental_radiation_enabled.get(key)) {
+				NCERConfig.dimSpecific.air_absorption.put(key, 0.0);
+				continue;
+			}
 		    
 	    	double top_rads = NCERConfig.dimSpecific.sky_max_rads.get(key);
 			double bottom_rads = NCConfig.radiation_lowest_rate;
