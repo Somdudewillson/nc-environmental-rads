@@ -11,6 +11,8 @@ GitHub Page of NuclearCraft: https://github.com/turbodiesel4598/NuclearCraft
 * Configurable per-dimension passive radiation from the environment.
 * Configurable simulation of the absorption of environmental radiation by blocks with respect to their hardness.
 * Configurable simulation of atmospheric absorption of radiation with configurable start and end heights, allowing for the realistic tapering of radiation received.
+* Configurable per-block radiation absorption overrides.
+* Configurable per-biome radiation level adjustments.
 
 
 ## Usage ideas:
@@ -23,7 +25,6 @@ GitHub Page of NuclearCraft: https://github.com/turbodiesel4598/NuclearCraft
 ## Future Plans:
 
 * Permit radiation level update cycles to differ in length and rate from the configured NuclearCraft radiation updates.
-* Add configurable per-block radiation absorption overrides.
 * Delay initial onset of radiation, per-player or globally, to create a grace period for players to prepare to burrow.
 * Allow for the creation of radiation "cycles" - i.e. a certain number of days at a certain radiation level, another number of days at a different rad level, etc, on repeat.
 * Optional radiation spillover from adjacent blocks on the x and z axes to make walls more important.
