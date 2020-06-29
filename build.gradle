@@ -63,7 +63,7 @@ repositories {
 		// http://www.gradle.org/docs/current/userguide/dependency_management.html
 		
 		deobfCompile "nuclearcraft-mod:NuclearCraft:2.18o:1.12.2"
-		deobfProvided "advanced-rocketry:AdvancedRocketry:AdvancedRocketry-1.12.2-1.6.0-195-universal"
+		//deobfProvided "advanced-rocketry:AdvancedRocketry:AdvancedRocketry-1.12.2-1.6.0-195-universal"
 	}
 
 	processResources {
