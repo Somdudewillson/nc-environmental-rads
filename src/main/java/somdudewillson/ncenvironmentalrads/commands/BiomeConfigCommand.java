@@ -32,7 +32,7 @@ public class BiomeConfigCommand extends CommandBase {
 		if (!(sender.getCommandSenderEntity() instanceof EntityPlayer)) {return;}
 		
 		EntityPlayer player = (EntityPlayer) sender.getCommandSenderEntity();
-		String biomeKey = player.world.getBiome(player.getPosition()).getBiomeName();
+		String biomeKey = player.world.getBiome(player.getPosition()).getRegistryName().toString();
 		
 		switch (args.length) {
 		case 0://Get biome rad settings

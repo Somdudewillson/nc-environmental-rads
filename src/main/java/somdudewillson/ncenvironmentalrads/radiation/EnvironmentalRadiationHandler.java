@@ -39,7 +39,7 @@ public class EnvironmentalRadiationHandler {
 		if (event.side == Side.SERVER && event.player instanceof EntityPlayerMP) {			
 			EntityPlayerMP player = (EntityPlayerMP)event.player;
 			String dimKey = player.world.provider.getDimensionType().getName();
-			String biomeKey = player.world.getBiome(event.player.getPosition()).getBiomeName();
+			String biomeKey = player.world.getBiome(event.player.getPosition()).getRegistryName().toString();
 			
 			Logger log = EnvironmentalRads.logger;
 			

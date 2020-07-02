@@ -114,7 +114,7 @@ public class CommonProxy {
 			log.info("Scanning Biomes of Type: "+type);
 			
 			for (BiomeEntry entry : BiomeManager.getBiomes(type)) {
-			    String key = entry.biome.getBiomeName();
+			    String key = entry.biome.getRegistryName().toString();
 			    
 			    log.info("Detected Biome: "+key);
 			    

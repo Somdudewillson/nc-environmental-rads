@@ -226,7 +226,7 @@ public class AREnvironmentalRadiationHelper implements
 	
 	@Override
 	public boolean tryAddNewBiome(World world, BlockPos pos) {
-		String key = world.getBiome(pos).getBiomeName();
+		String key = world.getBiome(pos).getRegistryName().toString();
 		if (key.length() < 1) { return false;}
 		
 	    //==========Settings which apply to all radiation sources
