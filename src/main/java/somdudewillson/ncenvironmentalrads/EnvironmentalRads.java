@@ -20,7 +20,7 @@ public class EnvironmentalRads
 {
     public static final String MODID = "ncenvironmentalrads";
     public static final String NAME = "Environmental Rads : NuclearCraft Addon";
-    public static final String VERSION = "1.12.2-1.0.4.0";
+    public static final String VERSION = "1.12.2-1.0.4.1";
     /* MCVERSION-MAJORMOD.MAJORAPI.MINOR.PATCH
      * 		MCVERSION
 	 * Always matches the Minecraft version the mod is for.
