@@ -1,8 +1,5 @@
-package main.java.somdudewillson.ncenvironmentalrads.commands;
+package somdudewillson.ncenvironmentalrads.commands;
 
-import main.java.somdudewillson.ncenvironmentalrads.EnvironmentalRads;
-import main.java.somdudewillson.ncenvironmentalrads.config.NCERConfig;
-import main.java.somdudewillson.ncenvironmentalrads.utils.CommandUtils;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -10,6 +7,10 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.common.config.Config;
 import net.minecraftforge.common.config.ConfigManager;
+import somdudewillson.ncenvironmentalrads.EnvironmentalRads;
+import somdudewillson.ncenvironmentalrads.config.NCERConfig;
+import somdudewillson.ncenvironmentalrads.proxy.CommonProxy;
+import somdudewillson.ncenvironmentalrads.utils.CommandUtils;
 
 public class DimensionConfigCommand extends CommandBase {
 
@@ -20,24 +21,27 @@ public class DimensionConfigCommand extends CommandBase {
 
 	@Override
 	public String getUsage(ICommandSender sender) {
-		return "/envrads-dimensionconfig "
-				+ "(<environmental radiation enabled> <use atmospheric absorption> "
+		return "/envrads-dimensionconfig \n"
+				+ "(\"Get\")\n"
+				+ "(\"Set\" <environmental radiation enabled> <use atmospheric absorption> "
 				+ "<atmospheric absorption thickness>"
 				+ "<sky radiation enabled> <sky rads> <sky origin height> "
 				+ "<bedrock radiation enabled> <bedrock rads> <bedrock origin height>)/"
 				+ "(\"Remove\")\n"
+				+ "(\"Scan\")\n"
 				+ "~ can be used in place of values, which will keep the current setting value.";
 	}
 
 	@Override
 	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
 		if (!(sender.getCommandSenderEntity() instanceof EntityPlayer)) {return;}
+		if (args.length<1) {CommandUtils.sendError(sender, "At least one argument is required!");}
 		
 		EntityPlayer player = (EntityPlayer) sender.getCommandSenderEntity();
-		String dimKey = player.world.provider.getDimensionType().getName();
+		String dimKey = CommonProxy.helper.getDimensionKey(player.world);
 		
-		switch (args.length) {
-		case 0://Get biome rad settings
+		switch (args[0].trim().toLowerCase()) {
+		case "get"://Get dim rad settings
 			String settingsString = "     Current Dimension-Specific Settings for: "+dimKey+"\n";
 			
 			settingsString += "Environmental radiation enabled: ";
@@ -73,28 +77,22 @@ public class DimensionConfigCommand extends CommandBase {
 			
 			CommandUtils.sendInfo(sender,settingsString);
 			break;
-		case 1://Wipe biome rad settings
-			if (args[0].trim().equalsIgnoreCase("Remove")) {
-				NCERConfig.dimSpecific.environmental_radiation_enabled.remove(dimKey);
-				NCERConfig.dimSpecific.use_atmospheric_absorption.remove(dimKey);
-				
-				NCERConfig.dimSpecific.sky_radiation.remove(dimKey);
-				NCERConfig.dimSpecific.sky_max_rads.remove(dimKey);
-				NCERConfig.dimSpecific.sky_origin_height.remove(dimKey);
-				
-				NCERConfig.dimSpecific.bedrock_radiation.remove(dimKey);
-				NCERConfig.dimSpecific.bedrock_max_rads.remove(dimKey);
-				NCERConfig.dimSpecific.bedrock_origin_height.remove(dimKey);
-				
-				ConfigManager.sync(EnvironmentalRads.MODID, Config.Type.INSTANCE);
-				CommandUtils.sendInfo(sender, "Config entry for "+dimKey+" removed;");
-			} else {
-				CommandUtils.sendError(sender,"The only valid single-arg from of this command is "
-						+ "'/envrads-biomeconfig Remove', "+
-						"which entirely removes the biome from the config file.");
-			}
+		case "remove"://Wipe biome rad settings
+			NCERConfig.dimSpecific.environmental_radiation_enabled.remove(dimKey);
+			NCERConfig.dimSpecific.use_atmospheric_absorption.remove(dimKey);
+			
+			NCERConfig.dimSpecific.sky_radiation.remove(dimKey);
+			NCERConfig.dimSpecific.sky_max_rads.remove(dimKey);
+			NCERConfig.dimSpecific.sky_origin_height.remove(dimKey);
+			
+			NCERConfig.dimSpecific.bedrock_radiation.remove(dimKey);
+			NCERConfig.dimSpecific.bedrock_max_rads.remove(dimKey);
+			NCERConfig.dimSpecific.bedrock_origin_height.remove(dimKey);
+			
+			ConfigManager.sync(EnvironmentalRads.MODID, Config.Type.INSTANCE);
+			CommandUtils.sendInfo(sender, "Config entry for "+dimKey+" removed;");
 			break;
-		case 8://Set dimension rad settings
+		case "set"://Set dimension rad settings
 			double newVal;
 			String infoString = "     Setting changes for: "+dimKey+"\n";
 			
@@ -200,11 +198,20 @@ public class DimensionConfigCommand extends CommandBase {
 			ConfigManager.sync(EnvironmentalRads.MODID, Config.Type.INSTANCE);
 			CommandUtils.sendInfo(sender,infoString);
 			break;
-		default://Invalid arg quantity
-			CommandUtils.sendError(sender, 
-					"Provide eight arguments to set the settings for the current dimension, "
-					+ "provide one argument 'Remove' to remove all settings for the current dimension, "
-					+ "or provide no arguments to get the settings for the current dimension.");
+		case "scan"://Scan all dims
+			String scanResult = "";
+			
+			for (String scannedKey : CommonProxy.helper.getDimensionKeys()) {
+				scanResult += "Dimension '"+scannedKey+"' registered...\n";
+				
+				CommonProxy.helper.tryAddNewDimension(scannedKey);
+			}
+			
+			CommandUtils.sendInfo(sender,scanResult);
+			break;
+		default://Invalid action
+			CommandUtils.sendError(sender, "'"+args[0].trim()+"' is not a valid action.\n"
+					+ "Valid actions are 'Get', 'Set', 'Remove', and 'Scan'.");
 			return;
 		}
 

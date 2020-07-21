@@ -1,4 +1,4 @@
-package main.java.somdudewillson.ncenvironmentalrads.utils;
+package somdudewillson.ncenvironmentalrads.utils;
 
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.Entity;

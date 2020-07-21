@@ -1,9 +1,5 @@
-package main.java.somdudewillson.ncenvironmentalrads.commands;
+package somdudewillson.ncenvironmentalrads.commands;
 
-import main.java.somdudewillson.ncenvironmentalrads.EnvironmentalRads;
-import main.java.somdudewillson.ncenvironmentalrads.config.NCERConfig;
-import main.java.somdudewillson.ncenvironmentalrads.utils.CommandUtils;
-import main.java.somdudewillson.ncenvironmentalrads.utils.NameUtils;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -13,6 +9,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.common.config.Config;
 import net.minecraftforge.common.config.ConfigManager;
+import somdudewillson.ncenvironmentalrads.EnvironmentalRads;
+import somdudewillson.ncenvironmentalrads.config.NCERConfig;
+import somdudewillson.ncenvironmentalrads.utils.CommandUtils;
+import somdudewillson.ncenvironmentalrads.utils.NameUtils;
 
 public class BlockConfigCommand extends CommandBase {
 

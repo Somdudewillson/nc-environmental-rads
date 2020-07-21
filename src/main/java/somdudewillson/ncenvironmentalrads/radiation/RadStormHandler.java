@@ -1,16 +1,16 @@
-package main.java.somdudewillson.ncenvironmentalrads.radiation;
+package somdudewillson.ncenvironmentalrads.radiation;
 
 import static nc.config.NCConfig.radiation_player_tick_rate;
 
 import java.util.Random;
 
-import main.java.somdudewillson.ncenvironmentalrads.config.NCERConfig;
-import main.java.somdudewillson.ncenvironmentalrads.cycledata.RadiationStormData;
 import nc.config.NCConfig;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.Side;
+import somdudewillson.ncenvironmentalrads.config.NCERConfig;
+import somdudewillson.ncenvironmentalrads.cycledata.RadiationStormData;
 
 public class RadStormHandler {
 	Random rng = new Random(System.nanoTime());

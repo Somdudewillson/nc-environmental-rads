@@ -1,10 +1,10 @@
-package main.java.somdudewillson.ncenvironmentalrads.cycledata;
+package somdudewillson.ncenvironmentalrads.cycledata;
 
-import main.java.somdudewillson.ncenvironmentalrads.EnvironmentalRads;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraft.world.storage.MapStorage;
 import net.minecraft.world.storage.WorldSavedData;
+import somdudewillson.ncenvironmentalrads.EnvironmentalRads;
 
 public class RadiationCycleData extends WorldSavedData {
 	private static final String DATA_NAME = EnvironmentalRads.MODID + "_CycleData";

@@ -1,9 +1,7 @@
-package main.java.somdudewillson.ncenvironmentalrads;
+package somdudewillson.ncenvironmentalrads;
 
-import main.java.somdudewillson.ncenvironmentalrads.commands.BiomeConfigCommand;
-import main.java.somdudewillson.ncenvironmentalrads.commands.BlockConfigCommand;
-import main.java.somdudewillson.ncenvironmentalrads.commands.DimensionConfigCommand;
-import main.java.somdudewillson.ncenvironmentalrads.proxy.CommonProxy;
+import org.apache.logging.log4j.Logger;
+
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
@@ -12,15 +10,19 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
+import somdudewillson.ncenvironmentalrads.commands.BiomeConfigCommand;
+import somdudewillson.ncenvironmentalrads.commands.BlockConfigCommand;
+import somdudewillson.ncenvironmentalrads.commands.DebugCommand;
+import somdudewillson.ncenvironmentalrads.commands.DimensionConfigCommand;
+import somdudewillson.ncenvironmentalrads.proxy.CommonProxy;
 
-import org.apache.logging.log4j.Logger;
-
-@Mod(modid = EnvironmentalRads.MODID, name = EnvironmentalRads.NAME, version = EnvironmentalRads.VERSION)
+@Mod(modid = EnvironmentalRads.MODID, name = EnvironmentalRads.NAME, version = EnvironmentalRads.VERSION,
+		dependencies = "required-after:nuclearcraft;after:advancedrocketry;")
 public class EnvironmentalRads
 {
     public static final String MODID = "ncenvironmentalrads";
     public static final String NAME = "Environmental Rads : NuclearCraft Addon";
-    public static final String VERSION = "1.12.2-1.0.4.1";
+    public static final String VERSION = "1.12.2-1.0.4.2";
     /* MCVERSION-MAJORMOD.MAJORAPI.MINOR.PATCH
      * 		MCVERSION
 	 * Always matches the Minecraft version the mod is for.
@@ -41,8 +43,8 @@ public class EnvironmentalRads
      */
     
     
-	public static final String CLIENT_PROXY = "main.java.somdudewillson.ncenvironmentalrads.proxy.ClientProxy";
-	public static final String COMMON_PROXY = "main.java.somdudewillson.ncenvironmentalrads.proxy.CommonProxy";
+	public static final String CLIENT_PROXY = "somdudewillson.ncenvironmentalrads.proxy.ClientProxy";
+	public static final String COMMON_PROXY = "somdudewillson.ncenvironmentalrads.proxy.CommonProxy";
     
     @Instance
     public static EnvironmentalRads instance = new EnvironmentalRads();
@@ -77,5 +79,7 @@ public class EnvironmentalRads
 		event.registerServerCommand(new BlockConfigCommand());
 		event.registerServerCommand(new BiomeConfigCommand());
 		event.registerServerCommand(new DimensionConfigCommand());
+
+		event.registerServerCommand(new DebugCommand());
 	}
 }

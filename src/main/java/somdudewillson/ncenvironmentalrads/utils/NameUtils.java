@@ -1,4 +1,4 @@
-package main.java.somdudewillson.ncenvironmentalrads.utils;
+package somdudewillson.ncenvironmentalrads.utils;
 
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemBlock;

@@ -1,16 +1,16 @@
-package main.java.somdudewillson.ncenvironmentalrads.config;
+package somdudewillson.ncenvironmentalrads.config;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import main.java.somdudewillson.ncenvironmentalrads.EnvironmentalRads;
 import nc.config.NCConfig;
 import net.minecraftforge.common.config.Config;
 import net.minecraftforge.common.config.ConfigManager;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import somdudewillson.ncenvironmentalrads.EnvironmentalRads;
 
 @Config(modid = EnvironmentalRads.MODID, name = "NCEnvironmentalRads")
 public class NCERConfig {
@@ -124,7 +124,7 @@ public class NCERConfig {
 	public static class ARSettings {
 		@Config.Comment({"If sky radiation should be calculated from the distance from the star.",
 		"If set to true, all relevant per-dimension radiation amount settings will be overridden.",
-		"If set to false, Advanced Rocketry dimensions will use overworld radiation settings."})
+		"If set to false, Advanced Rocketry dimensions will use relevant per-dim radiation settings."})
 		public boolean solar_radiation_origin = false;
 		
 		@Config.Comment({"How much the automatic radiation from stars should be scaled.",

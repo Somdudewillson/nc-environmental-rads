@@ -1,32 +1,32 @@
-package main.java.somdudewillson.ncenvironmentalrads.proxy;
-
-import it.unimi.dsi.fastutil.ints.IntSortedSet;
+package somdudewillson.ncenvironmentalrads.proxy;
 
 import java.util.Map.Entry;
 
 import org.apache.logging.log4j.Logger;
 
-import main.java.somdudewillson.ncenvironmentalrads.EnvironmentalRads;
-import main.java.somdudewillson.ncenvironmentalrads.config.NCERConfig;
-import main.java.somdudewillson.ncenvironmentalrads.config.compat.ICompatConfigLoader;
-import main.java.somdudewillson.ncenvironmentalrads.radiation.EnvironmentalRadiationHandler;
-import main.java.somdudewillson.ncenvironmentalrads.radiation.helpers.DefaultEnvironmentalRadiationHelper;
-import main.java.somdudewillson.ncenvironmentalrads.radiation.helpers.IEnvironmentalRadiationHelper;
+import it.unimi.dsi.fastutil.ints.IntSortedSet;
 import net.minecraft.world.DimensionType;
-import net.minecraftforge.common.BiomeManager;
-import net.minecraftforge.common.BiomeManager.BiomeEntry;
+import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Config;
 import net.minecraftforge.common.config.ConfigManager;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
+import somdudewillson.ncenvironmentalrads.EnvironmentalRads;
+import somdudewillson.ncenvironmentalrads.config.NCERConfig;
+import somdudewillson.ncenvironmentalrads.config.compat.ICompatConfigLoader;
+import somdudewillson.ncenvironmentalrads.radiation.EnvironmentalRadiationHandler;
+import somdudewillson.ncenvironmentalrads.radiation.helpers.DefaultEnvironmentalRadiationHelper;
+import somdudewillson.ncenvironmentalrads.radiation.helpers.IEnvironmentalRadiationHelper;
 
 public class CommonProxy {
 	private Logger log = null;
+	public static IEnvironmentalRadiationHelper helper;
 	
 	public void postInit(FMLPostInitializationEvent postEvent) {
-		IEnvironmentalRadiationHelper helper = new DefaultEnvironmentalRadiationHelper();
+		helper = new DefaultEnvironmentalRadiationHelper();
 		
 		//Register dimensions in config
 		updateDimensions();
@@ -39,12 +39,12 @@ public class CommonProxy {
 			if (Loader.isModLoaded("advancedrocketry")) {
 				log.info("Advanced Rocketry Found, Loading Compat...");
 				
-				log.info("Loading Advanced Rocketry Compat Config");
-				loader = Class.forName("main.java.somdudewillson.ncenvironmentalrads.config.compat.ARCompat").asSubclass(ICompatConfigLoader.class).newInstance();
-				loader.updateConfig();
-				
 				log.info("Switching to Advanced Rocketry Compat RadiationHelper");
-				helper = Class.forName("main.java.somdudewillson.ncenvironmentalrads.radiation.helpers.AREnvironmentalRadiationHelper").asSubclass(IEnvironmentalRadiationHelper.class).newInstance();
+				helper = Class.forName("somdudewillson.ncenvironmentalrads.radiation.helpers.AREnvironmentalRadiationHelper").asSubclass(IEnvironmentalRadiationHelper.class).newInstance();
+				
+				log.info("Loading Advanced Rocketry Compat Config");
+				loader = Class.forName("somdudewillson.ncenvironmentalrads.config.compat.ARCompat").asSubclass(ICompatConfigLoader.class).newInstance();
+				loader.updateConfig();
 
 				log.info("Advanced Rocketry Compat Loaded.");
 			} else {
@@ -69,40 +69,7 @@ public class CommonProxy {
 		    
 		    log.info("Detected Dimension: "+key);
 		    
-		    //==========Settings which apply to all radiation sources
-		    if (!NCERConfig.dimSpecific.environmental_radiation_enabled.containsKey(key)) {
-		    	NCERConfig.dimSpecific.environmental_radiation_enabled.put(key, false);
-		    }
-		    if (!NCERConfig.dimSpecific.use_atmospheric_absorption.containsKey(key)) {
-		    	NCERConfig.dimSpecific.use_atmospheric_absorption.put(key, false);
-		    }
-		    if (!NCERConfig.dimSpecific.atmospheric_absorption_thickness.containsKey(key)) {
-		    	NCERConfig.dimSpecific.atmospheric_absorption_thickness.put(key, new Integer(255));
-		    }
-		    
-		    //-----Sky-specific settings
-		    if (!NCERConfig.dimSpecific.sky_radiation.containsKey(key)) {
-		    	NCERConfig.dimSpecific.sky_radiation.put(key, false);
-		    }
-		    if (!NCERConfig.dimSpecific.sky_max_rads.containsKey(key)) {
-		    	NCERConfig.dimSpecific.sky_max_rads.put(key, new Double(0));
-		    }
-		    if (!NCERConfig.dimSpecific.sky_origin_height.containsKey(key)) {
-		    	NCERConfig.dimSpecific.sky_origin_height.put(key, new Integer(255));
-		    }
-		    //-----
-		    
-		    //-----Bedrock-specific settings
-		    if (!NCERConfig.dimSpecific.bedrock_radiation.containsKey(key)) {
-		    	NCERConfig.dimSpecific.bedrock_radiation.put(key, false);
-		    }
-		    if (!NCERConfig.dimSpecific.bedrock_max_rads.containsKey(key)) {
-		    	NCERConfig.dimSpecific.bedrock_max_rads.put(key, new Double(0));
-		    }
-		    if (!NCERConfig.dimSpecific.bedrock_origin_height.containsKey(key)) {
-		    	NCERConfig.dimSpecific.bedrock_origin_height.put(key, new Integer(0));
-		    }
-		    //-----
+		    helper.tryAddNewDimension(key);
 		}
 	    log.info("Dimension Auto-Detecting Done.");
 		NCERConfig.updateAirAbsorption();
@@ -110,37 +77,12 @@ public class CommonProxy {
 	
 	private void updateBiomes() {
 		log.info("Auto-Detecting Biomes...");
-		for (BiomeManager.BiomeType type : BiomeManager.BiomeType.values()) {
-			log.info("Scanning Biomes of Type: "+type);
-			
-			for (BiomeEntry entry : BiomeManager.getBiomes(type)) {
-			    String key = entry.biome.getRegistryName().toString();
-			    
-			    log.info("Detected Biome: "+key);
-			    
-			    //==========Settings which apply to all radiation sources
-			    if (!NCERConfig.biomeSpecific.biome_effects_enabled.containsKey(key)) {
-			    	NCERConfig.biomeSpecific.biome_effects_enabled.put(key, false);
-			    }
-			    
-			    //-----Sky-specific settings
-			    if (!NCERConfig.biomeSpecific.sky_multiplier.containsKey(key)) {
-			    	NCERConfig.biomeSpecific.sky_multiplier.put(key, new Double(1));
-			    }
-			    if (!NCERConfig.biomeSpecific.sky_shift.containsKey(key)) {
-			    	NCERConfig.biomeSpecific.sky_shift.put(key, new Double(0));
-			    }
-			    //-----
-			    
-			    //-----Bedrock-specific settings
-			    if (!NCERConfig.biomeSpecific.bedrock_multiplier.containsKey(key)) {
-			    	NCERConfig.biomeSpecific.bedrock_multiplier.put(key, new Double(1));
-			    }
-			    if (!NCERConfig.biomeSpecific.bedrock_shift.containsKey(key)) {
-			    	NCERConfig.biomeSpecific.bedrock_shift.put(key, new Double(0));
-			    }
-			    //-----
-			}
+		for (Biome entry : ForgeRegistries.BIOMES.getValuesCollection()) {
+		    String key = entry.getRegistryName().toString();
+		    
+		    log.info("Detected Biome: "+key);
+		    
+		    helper.tryAddNewBiome(key);
 		}
 	    log.info("Biome Auto-Detecting Done.");
 	}

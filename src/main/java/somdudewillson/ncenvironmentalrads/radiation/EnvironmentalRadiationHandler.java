@@ -1,12 +1,9 @@
-package main.java.somdudewillson.ncenvironmentalrads.radiation;
+package somdudewillson.ncenvironmentalrads.radiation;
 
 import static nc.config.NCConfig.radiation_player_tick_rate;
 
 import org.apache.logging.log4j.Logger;
 
-import main.java.somdudewillson.ncenvironmentalrads.EnvironmentalRads;
-import main.java.somdudewillson.ncenvironmentalrads.config.NCERConfig;
-import main.java.somdudewillson.ncenvironmentalrads.radiation.helpers.IEnvironmentalRadiationHelper;
 import nc.capability.radiation.entity.IEntityRads;
 import nc.config.NCConfig;
 import nc.network.PacketHandler;
@@ -19,6 +16,9 @@ import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.Side;
+import somdudewillson.ncenvironmentalrads.EnvironmentalRads;
+import somdudewillson.ncenvironmentalrads.config.NCERConfig;
+import somdudewillson.ncenvironmentalrads.radiation.helpers.IEnvironmentalRadiationHelper;
 
 public class EnvironmentalRadiationHandler {
 	private IEnvironmentalRadiationHelper helper;
@@ -38,7 +38,7 @@ public class EnvironmentalRadiationHandler {
 		
 		if (event.side == Side.SERVER && event.player instanceof EntityPlayerMP) {			
 			EntityPlayerMP player = (EntityPlayerMP)event.player;
-			String dimKey = player.world.provider.getDimensionType().getName();
+			String dimKey = helper.getDimensionKey(player.world);
 			String biomeKey = player.world.getBiome(event.player.getPosition()).getRegistryName().toString();
 			
 			Logger log = EnvironmentalRads.logger;

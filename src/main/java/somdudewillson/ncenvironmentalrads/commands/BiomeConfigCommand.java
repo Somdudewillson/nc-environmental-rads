@@ -1,8 +1,5 @@
-package main.java.somdudewillson.ncenvironmentalrads.commands;
+package somdudewillson.ncenvironmentalrads.commands;
 
-import main.java.somdudewillson.ncenvironmentalrads.EnvironmentalRads;
-import main.java.somdudewillson.ncenvironmentalrads.config.NCERConfig;
-import main.java.somdudewillson.ncenvironmentalrads.utils.CommandUtils;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -10,6 +7,9 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.common.config.Config;
 import net.minecraftforge.common.config.ConfigManager;
+import somdudewillson.ncenvironmentalrads.EnvironmentalRads;
+import somdudewillson.ncenvironmentalrads.config.NCERConfig;
+import somdudewillson.ncenvironmentalrads.utils.CommandUtils;
 
 public class BiomeConfigCommand extends CommandBase {
 
