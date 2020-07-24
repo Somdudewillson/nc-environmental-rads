@@ -203,16 +203,25 @@ public class AREnvironmentalRadiationHelper implements
 			
 			rads = blackHoleEmittedRads(1, 38, mass, NCERConfig.arSettings.solar_radiation_sampling);
 		} else {
-			double surface_area = 4*Math.PI*Math.pow((star.getSize()*12742000)/2, 2);
+			double surface_area = 4*Math.PI*Math.pow((star.getSize()*1391000000)/2, 2);
 			
 			//Calculate rads at star
-			rads = emittedRadsOverWavelengthInterval(1, 38, star.getTemperature(), surface_area, NCERConfig.arSettings.solar_radiation_sampling);
+			rads = emittedRadsOverWavelengthInterval(1, 38, star.getTemperature()*57.78, surface_area, NCERConfig.arSettings.solar_radiation_sampling);
 			rads *= NCERConfig.arSettings.solar_radiation_scale;
 		}
 		
 		return rads;
 	}
 	
+	/**
+	 * 
+	 * @param wavelengthStart The lower end of the wavelength interval to be scanned, in nm.
+	 * @param wavelengthEnd The upper end of the wavelength interval to be scanned, in nm.
+	 * @param temp Kelvin (?)
+	 * @param area M^2
+	 * @param tests The number of wavelengths between the two ends of the interval to sample. 
+	 * @return
+	 */
 	private double emittedRadsOverWavelengthInterval(int wavelengthStart, int wavelengthEnd,
 			double temp, double area, double tests) {		
 		double part1 = 2 * Math.PI * Plancks_constant * c * c;
@@ -223,7 +232,9 @@ public class AREnvironmentalRadiationHelper implements
 		double watts = 0.0;
 		for (int i = 0; i < tests; i++) {
 			curWave -= (-1) * waveInc;
-		    watts += part1 * waveInc * area * Math.pow(10, -9) * (1 / (Math.pow(curWave * Math.pow(10, -9), 5) * (Math.exp(part2 / (curWave * temp)) - 1)));
+		    watts += part1 * waveInc * area * Math.pow(10, -9)
+		    		* (1 / (Math.pow(curWave * Math.pow(10, -9), 5)
+		    		* (Math.exp(part2 / (curWave * temp)) - 1)));
 		};
 		
 		return (watts/88)/60;
