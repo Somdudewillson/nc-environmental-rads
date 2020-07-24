@@ -101,30 +101,33 @@ public class DimensionConfigCommand extends CommandBase {
 			if (args.length != 10) { CommandUtils.sendError(sender, "Incorrect number of arguments.");return; }
 			
 			double newVal;
+			int argI = 0;
 			String infoString = "     Setting changes for: "+dimKey+"\n";
 			
 			//Environmental Radiation Enabled-ness
-			if (!args[0].trim().equalsIgnoreCase("~")) {
+			if (!args[argI].trim().equalsIgnoreCase("~")) {
 				NCERConfig.dimSpecific.environmental_radiation_enabled.put(dimKey,
-						CommandBase.parseBoolean(args[0]));
+						CommandBase.parseBoolean(args[argI]));
 			}
 			infoString += "Environmental radiation enabled: "+
 					NCERConfig.dimSpecific.environmental_radiation_enabled.get(dimKey)+"\n";
+			argI++;
 			
 			//Atmospheric Absorption Enabled-ness
-			if (!args[1].trim().equalsIgnoreCase("~")) {
+			if (!args[argI].trim().equalsIgnoreCase("~")) {
 				NCERConfig.dimSpecific.use_atmospheric_absorption.put(dimKey,
-						CommandBase.parseBoolean(args[1]));
+						CommandBase.parseBoolean(args[argI]));
 			}
 			infoString += "Atmospheric absorption enabled: "+
 					NCERConfig.dimSpecific.use_atmospheric_absorption.get(dimKey)+"\n";
+			argI++;
 			
 			//Atmospheric Absorption Thickness
-			if (!args[2].trim().equalsIgnoreCase("~")) {
+			if (!args[argI].trim().equalsIgnoreCase("~")) {
 				newVal = NCERConfig.dimSpecific.atmospheric_absorption_thickness.get(dimKey);
 			} else {
 				try {
-					newVal = Integer.parseInt(args[2]);
+					newVal = Integer.parseInt(args[argI]);
 				} catch (NumberFormatException e) {
 					CommandUtils.sendError(sender,"Provide a valid number for the atmospheric absorption thickness.");
 					return;
@@ -133,23 +136,25 @@ public class DimensionConfigCommand extends CommandBase {
 			NCERConfig.dimSpecific.atmospheric_absorption_thickness.put(dimKey, (int) newVal);
 			infoString += "Atmospheric absorption thickness: "+
 					newVal+"\n";
+			argI++;
 			
 			
 			//-----Sky Radiation Settings
 			//Sky Radiation Enabled-ness
-			if (!args[3].trim().equalsIgnoreCase("~")) {
+			if (!args[argI].trim().equalsIgnoreCase("~")) {
 				NCERConfig.dimSpecific.sky_radiation.put(dimKey,
-						CommandBase.parseBoolean(args[3]));
+						CommandBase.parseBoolean(args[argI]));
 			}
 			infoString += "Sky radiation enabled: "+
 					NCERConfig.dimSpecific.sky_radiation.get(dimKey)+"\n";
+			argI++;
 			
 			//Sky Radiation Amount
-			if (args[4].trim().equalsIgnoreCase("~")) {
+			if (args[argI].trim().equalsIgnoreCase("~")) {
 				newVal = NCERConfig.dimSpecific.sky_max_rads.get(dimKey);
 			} else {
 				try {
-					newVal = Double.parseDouble(args[4]);
+					newVal = Double.parseDouble(args[argI]);
 				} catch (NumberFormatException e) {
 					CommandUtils.sendError(sender,"Provide a valid number for the sky rad amount.");
 					return;
@@ -157,69 +162,72 @@ public class DimensionConfigCommand extends CommandBase {
 			}
 			NCERConfig.dimSpecific.sky_max_rads.put(dimKey, newVal);
 			infoString += "Sky radiation: "+newVal+"\n";
+			argI++;
 			
 			//Sky Radiation Source Y-Level
-			if (args[5].trim().equalsIgnoreCase("~")) {
+			if (args[argI].trim().equalsIgnoreCase("~")) {
 				newVal = NCERConfig.dimSpecific.sky_origin_height.get(dimKey);
 			} else {
 				try {
-					newVal = Integer.parseInt(args[5]);
+					newVal = Integer.parseInt(args[argI]);
 				} catch (NumberFormatException e) {
 					CommandUtils.sendError(sender,"Provide a valid number for the sky rad source y-level.");
 					return;
 				}
-			}
-			
+			}			
 			NCERConfig.dimSpecific.sky_origin_height.put(dimKey, (int) newVal);
 			infoString += "Sky radiation source y-level: "+newVal+"\n";
+			argI++;
 			
-			if (!args[6].trim().equalsIgnoreCase("~")) {
+			if (!args[argI].trim().equalsIgnoreCase("~")) {
 				NCERConfig.dimSpecific.sky_respect_daynight.put(dimKey,
-						CommandBase.parseBoolean(args[6]));
+						CommandBase.parseBoolean(args[argI]));
 			}
 			infoString += "Sky radiation respects day/night cycle: "+
 					NCERConfig.dimSpecific.sky_respect_daynight.get(dimKey)+"\n";
+			argI++;
 			//-----
 			
 			
 			//-----Bedrock Radiation Settings
 			//Bedrock Radiation Enabled-ness
-			if (!args[7].trim().equalsIgnoreCase("~")) {
+			if (!args[argI].trim().equalsIgnoreCase("~")) {
 				NCERConfig.dimSpecific.bedrock_radiation.put(dimKey,
-						CommandBase.parseBoolean(args[7]));
+						CommandBase.parseBoolean(args[argI]));
 			}
 			infoString += "Bedrock radiation enabled: "+
 					NCERConfig.dimSpecific.bedrock_radiation.get(dimKey)+"\n";
+			argI++;
 			
 			//Bedrock Radiation Amount
-			if (args[8].trim().equalsIgnoreCase("~")) {
+			if (args[argI].trim().equalsIgnoreCase("~")) {
 				newVal = NCERConfig.dimSpecific.bedrock_max_rads.get(dimKey);
 			} else {
 				try {
-					newVal = Double.parseDouble(args[8]);
+					newVal = Double.parseDouble(args[argI]);
 				} catch (NumberFormatException e) {
 					CommandUtils.sendError(sender,"Provide a valid number for the bedrock rad amount.");
 					return;
 				}
 			}
-			
 			NCERConfig.dimSpecific.bedrock_max_rads.put(dimKey, newVal);
 			infoString += "Bedrock radiation: "+newVal+"\n";
+			argI++;
 			
 			//Bedrock Radiation Source Y-Level
-			if (args[9].trim().equalsIgnoreCase("~")) {
+			if (args[argI].trim().equalsIgnoreCase("~")) {
 				newVal = NCERConfig.dimSpecific.bedrock_origin_height.get(dimKey);
 			} else {
 				try {
-					newVal = Integer.parseInt(args[9]);
+					newVal = Integer.parseInt(args[argI]);
 				} catch (NumberFormatException e) {
 					CommandUtils.sendError(sender,"Provide a valid number for the bedrock rad source y-level.");
 					return;
 				}
-			}
-			
+			}			
 			NCERConfig.dimSpecific.bedrock_origin_height.put(dimKey, (int) newVal);
 			infoString += "Bedrock radiation source y-level: "+newVal+"\n";
+			argI++;
 			//-----
 			
 			

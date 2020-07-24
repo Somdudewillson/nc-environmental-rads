@@ -20,6 +20,7 @@ public class DefaultEnvironmentalRadiationHelper implements
 	public double getRadsFromSky(BlockPos pos, World world, String dimKey, String biomeKey) {
 		double top_rads = NCERConfig.dimSpecific.sky_max_rads.get(dimKey);
 		top_rads = getAdjustedRadsFromSky(top_rads, biomeKey);
+		if (NCERConfig.dimSpecific.sky_respect_daynight.get(dimKey)) { top_rads *= world.getSunBrightnessFactor(0); }
 		int top_height = NCERConfig.dimSpecific.sky_origin_height.get(dimKey);
 		
 		//If player is above the top height, we know environmental rads are at max
