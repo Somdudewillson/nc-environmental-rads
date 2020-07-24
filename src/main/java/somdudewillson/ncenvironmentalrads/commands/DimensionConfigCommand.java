@@ -25,7 +25,7 @@ public class DimensionConfigCommand extends CommandBase {
 				+ "(\"Get\")\n"
 				+ "(\"Set\" <environmental radiation enabled> <use atmospheric absorption> "
 				+ "<atmospheric absorption thickness>"
-				+ "<sky radiation enabled> <sky rads> <sky origin height> "
+				+ "<sky radiation enabled> <sky rads> <sky origin height> <respect day/night cycle>"
 				+ "<bedrock radiation enabled> <bedrock rads> <bedrock origin height>)/"
 				+ "(\"Remove\")\n"
 				+ "(\"Scan\")\n"
@@ -64,6 +64,10 @@ public class DimensionConfigCommand extends CommandBase {
 			settingsString += NCERConfig.dimSpecific.sky_origin_height.getOrDefault(dimKey, 255);
 			settingsString += "\n";
 			
+			settingsString += "Sky radiation respects day/night: ";
+			settingsString += NCERConfig.dimSpecific.sky_respect_daynight.getOrDefault(dimKey, false);
+			settingsString += "\n";
+			
 			settingsString += "Bedrock radiation enabled: ";
 			settingsString += NCERConfig.dimSpecific.bedrock_radiation.getOrDefault(dimKey, false);
 			settingsString += "\n";
@@ -84,6 +88,7 @@ public class DimensionConfigCommand extends CommandBase {
 			NCERConfig.dimSpecific.sky_radiation.remove(dimKey);
 			NCERConfig.dimSpecific.sky_max_rads.remove(dimKey);
 			NCERConfig.dimSpecific.sky_origin_height.remove(dimKey);
+			NCERConfig.dimSpecific.sky_respect_daynight.remove(dimKey);
 			
 			NCERConfig.dimSpecific.bedrock_radiation.remove(dimKey);
 			NCERConfig.dimSpecific.bedrock_max_rads.remove(dimKey);
@@ -93,6 +98,8 @@ public class DimensionConfigCommand extends CommandBase {
 			CommandUtils.sendInfo(sender, "Config entry for "+dimKey+" removed;");
 			break;
 		case "set"://Set dimension rad settings
+			if (args.length != 10) { CommandUtils.sendError(sender, "Incorrect number of arguments.");return; }
+			
 			double newVal;
 			String infoString = "     Setting changes for: "+dimKey+"\n";
 			
@@ -112,37 +119,51 @@ public class DimensionConfigCommand extends CommandBase {
 			infoString += "Atmospheric absorption enabled: "+
 					NCERConfig.dimSpecific.use_atmospheric_absorption.get(dimKey)+"\n";
 			
+			//Atmospheric Absorption Thickness
+			if (!args[2].trim().equalsIgnoreCase("~")) {
+				newVal = NCERConfig.dimSpecific.atmospheric_absorption_thickness.get(dimKey);
+			} else {
+				try {
+					newVal = Integer.parseInt(args[2]);
+				} catch (NumberFormatException e) {
+					CommandUtils.sendError(sender,"Provide a valid number for the atmospheric absorption thickness.");
+					return;
+				}
+			}
+			NCERConfig.dimSpecific.atmospheric_absorption_thickness.put(dimKey, (int) newVal);
+			infoString += "Atmospheric absorption thickness: "+
+					newVal+"\n";
+			
 			
 			//-----Sky Radiation Settings
 			//Sky Radiation Enabled-ness
-			if (!args[2].trim().equalsIgnoreCase("~")) {
+			if (!args[3].trim().equalsIgnoreCase("~")) {
 				NCERConfig.dimSpecific.sky_radiation.put(dimKey,
-						CommandBase.parseBoolean(args[2]));
+						CommandBase.parseBoolean(args[3]));
 			}
 			infoString += "Sky radiation enabled: "+
 					NCERConfig.dimSpecific.sky_radiation.get(dimKey)+"\n";
 			
 			//Sky Radiation Amount
-			if (args[3].trim().equalsIgnoreCase("~")) {
+			if (args[4].trim().equalsIgnoreCase("~")) {
 				newVal = NCERConfig.dimSpecific.sky_max_rads.get(dimKey);
 			} else {
 				try {
-					newVal = Double.parseDouble(args[3]);
+					newVal = Double.parseDouble(args[4]);
 				} catch (NumberFormatException e) {
 					CommandUtils.sendError(sender,"Provide a valid number for the sky rad amount.");
 					return;
 				}
 			}
-			
 			NCERConfig.dimSpecific.sky_max_rads.put(dimKey, newVal);
 			infoString += "Sky radiation: "+newVal+"\n";
 			
 			//Sky Radiation Source Y-Level
-			if (args[4].trim().equalsIgnoreCase("~")) {
+			if (args[5].trim().equalsIgnoreCase("~")) {
 				newVal = NCERConfig.dimSpecific.sky_origin_height.get(dimKey);
 			} else {
 				try {
-					newVal = Integer.parseInt(args[4]);
+					newVal = Integer.parseInt(args[5]);
 				} catch (NumberFormatException e) {
 					CommandUtils.sendError(sender,"Provide a valid number for the sky rad source y-level.");
 					return;
@@ -151,24 +172,31 @@ public class DimensionConfigCommand extends CommandBase {
 			
 			NCERConfig.dimSpecific.sky_origin_height.put(dimKey, (int) newVal);
 			infoString += "Sky radiation source y-level: "+newVal+"\n";
+			
+			if (!args[6].trim().equalsIgnoreCase("~")) {
+				NCERConfig.dimSpecific.sky_respect_daynight.put(dimKey,
+						CommandBase.parseBoolean(args[6]));
+			}
+			infoString += "Sky radiation respects day/night cycle: "+
+					NCERConfig.dimSpecific.sky_respect_daynight.get(dimKey)+"\n";
 			//-----
 			
 			
 			//-----Bedrock Radiation Settings
 			//Bedrock Radiation Enabled-ness
-			if (!args[5].trim().equalsIgnoreCase("~")) {
+			if (!args[7].trim().equalsIgnoreCase("~")) {
 				NCERConfig.dimSpecific.bedrock_radiation.put(dimKey,
-						CommandBase.parseBoolean(args[5]));
+						CommandBase.parseBoolean(args[7]));
 			}
 			infoString += "Bedrock radiation enabled: "+
 					NCERConfig.dimSpecific.bedrock_radiation.get(dimKey)+"\n";
 			
 			//Bedrock Radiation Amount
-			if (args[6].trim().equalsIgnoreCase("~")) {
+			if (args[8].trim().equalsIgnoreCase("~")) {
 				newVal = NCERConfig.dimSpecific.bedrock_max_rads.get(dimKey);
 			} else {
 				try {
-					newVal = Double.parseDouble(args[6]);
+					newVal = Double.parseDouble(args[8]);
 				} catch (NumberFormatException e) {
 					CommandUtils.sendError(sender,"Provide a valid number for the bedrock rad amount.");
 					return;
@@ -179,11 +207,11 @@ public class DimensionConfigCommand extends CommandBase {
 			infoString += "Bedrock radiation: "+newVal+"\n";
 			
 			//Bedrock Radiation Source Y-Level
-			if (args[7].trim().equalsIgnoreCase("~")) {
+			if (args[9].trim().equalsIgnoreCase("~")) {
 				newVal = NCERConfig.dimSpecific.bedrock_origin_height.get(dimKey);
 			} else {
 				try {
-					newVal = Integer.parseInt(args[7]);
+					newVal = Integer.parseInt(args[9]);
 				} catch (NumberFormatException e) {
 					CommandUtils.sendError(sender,"Provide a valid number for the bedrock rad source y-level.");
 					return;

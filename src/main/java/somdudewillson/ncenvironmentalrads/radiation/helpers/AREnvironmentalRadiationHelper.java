@@ -41,6 +41,7 @@ public class AREnvironmentalRadiationHelper implements
 		double top_rads;
 		if (NCERConfig.arSettings.solar_radiation_origin && galaxy.isDimensionCreated(dimID)) {
 			top_rads = getRadsFromSystemStar(galaxy.getDimensionProperties(dimID));
+			if (true) { top_rads *= world.getSunBrightnessFactor(0); }
 		} else {
 			top_rads = NCERConfig.dimSpecific.sky_max_rads.get(dimKey);
 		}

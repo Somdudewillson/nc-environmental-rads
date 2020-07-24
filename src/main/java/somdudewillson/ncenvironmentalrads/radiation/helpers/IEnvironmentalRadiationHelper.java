@@ -99,6 +99,9 @@ public interface IEnvironmentalRadiationHelper {
 	    if (!NCERConfig.dimSpecific.sky_origin_height.containsKey(key)) {
 	    	NCERConfig.dimSpecific.sky_origin_height.put(key, new Integer(255));
 	    }
+	    if (!NCERConfig.dimSpecific.sky_respect_daynight.containsKey(key)) {
+	    	NCERConfig.dimSpecific.sky_respect_daynight.put(key, false);
+	    }
 	    //-----
 	    
 	    //-----Bedrock-specific settings

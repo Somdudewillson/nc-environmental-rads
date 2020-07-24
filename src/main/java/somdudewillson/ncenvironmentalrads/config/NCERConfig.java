@@ -72,6 +72,10 @@ public class NCERConfig {
 		@Config.Comment({"The height at which sky-sourced radiation is at its full value.",
 			"Will be ignored if radiation from the sky is disabled."})
 		public final Map<String, Integer> sky_origin_height = new HashMap<>();
+		
+		@Config.Comment({"If dimensions will treat sky-sourced radiation as coming from the sun-",
+		"i.e. dependent on the day/night cycle."})
+		public final Map<String, Boolean> sky_respect_daynight = new HashMap<>();
 		//-----
 		
 		//-----Bedrock-related Settings
