@@ -74,6 +74,12 @@ public class EnvironmentalRadiationHandler {
 		dimKey = NCERConfig.dimSpecific.environmental_radiation_enabled.containsKey(dimKey) ? 
 			dimKey : "overworld";
 		
+		//Config fixer
+		if (!NCERConfig.dimSpecific.verified.contains(dimKey)) {
+			helper.tryAddNewDimension(dimKey);
+			NCERConfig.dimSpecific.verified.add(dimKey);
+		}
+		
 		if (NCERConfig.dimSpecific.sky_radiation.get(dimKey)) {//If sky radiation is enabled, calculate it
 			rads += helper.getRadsFromSky(pos, world, dimKey, biomeKey);
 		}

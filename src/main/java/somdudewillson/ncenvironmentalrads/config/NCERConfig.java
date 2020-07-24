@@ -1,8 +1,10 @@
 package somdudewillson.ncenvironmentalrads.config;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import nc.config.NCConfig;
 import net.minecraftforge.common.config.Config;
@@ -94,6 +96,8 @@ public class NCERConfig {
 		
 		@Config.Ignore
 		public final Map<String, Double> air_absorption = new HashMap<>();
+		@Config.Ignore
+		public final Set<String> verified = new HashSet<>();
 	}
 	
 	//Biome-Specific Settings
