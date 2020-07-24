@@ -199,7 +199,7 @@ public class AREnvironmentalRadiationHelper implements
 		StellarBody star = dim.getStar();
 		
 		if (star.isBlackHole()) {
-			double mass = (((star.getSize()*12742000)/2)*c*c)/(2*gravitational_constant);
+			double mass = (((star.getSize()*1391000000)/2)*c*c)/(2*gravitational_constant);
 			
 			rads = blackHoleEmittedRads(1, 38, mass, NCERConfig.arSettings.solar_radiation_sampling);
 		} else {
