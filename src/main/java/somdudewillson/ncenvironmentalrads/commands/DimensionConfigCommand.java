@@ -29,6 +29,7 @@ public class DimensionConfigCommand extends CommandBase {
 				+ "<bedrock radiation enabled> <bedrock rads> <bedrock origin height>)/"
 				+ "(\"Remove\")\n"
 				+ "(\"Scan\")\n"
+				+ "(\"Scan_Autoenable\")\n"
 				+ "~ can be used in place of values, which will keep the current setting value.";
 	}
 
@@ -40,7 +41,8 @@ public class DimensionConfigCommand extends CommandBase {
 		EntityPlayer player = (EntityPlayer) sender.getCommandSenderEntity();
 		String dimKey = CommonProxy.helper.getDimensionKey(player.world);
 		
-		switch (args[0].trim().toLowerCase()) {
+		String cmd = args[0].trim().toLowerCase();
+		switch (cmd) {
 		case "get"://Get dim rad settings
 			String settingsString = "     Current Dimension-Specific Settings for: "+dimKey+"\n";
 			
@@ -235,19 +237,27 @@ public class DimensionConfigCommand extends CommandBase {
 			CommandUtils.sendInfo(sender,infoString);
 			break;
 		case "scan"://Scan all dims
+		case "scan_autoenable"://Scan all dims and enable sky radiation automatically
 			String scanResult = "";
 			
 			for (String scannedKey : CommonProxy.helper.getDimensionKeys()) {
 				scanResult += "Dimension '"+scannedKey+"' registered...\n";
 				
 				CommonProxy.helper.tryAddNewDimension(scannedKey);
+				
+				if (cmd=="scan_autoenable") {
+					//Base nuclearcraft
+					NCERConfig.dimSpecific.environmental_radiation_enabled.put(scannedKey, true);
+					NCERConfig.dimSpecific.sky_radiation.put(scannedKey, true);
+					NCERConfig.dimSpecific.use_atmospheric_absorption.put(scannedKey, true);
+				}
 			}
 			
 			CommandUtils.sendInfo(sender,scanResult);
 			break;
 		default://Invalid action
 			CommandUtils.sendError(sender, "'"+args[0].trim()+"' is not a valid action.\n"
-					+ "Valid actions are 'Get', 'Set', 'Remove', and 'Scan'.");
+					+ "Valid actions are 'Get', 'Set', 'Remove', 'Scan', and 'Scan_Autoenable'.");
 			return;
 		}
 
