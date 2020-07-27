@@ -134,7 +134,7 @@ public class NCERConfig {
 	
 	//Advanced Rocketry Compat Settings
 	public static class ARSettings {
-		@Config.Comment({"If sky radiation should be calculated from the distance from the star.",
+		@Config.Comment({"If sky radiation should be calculated from the star's estimated energy output.",
 		"If set to true, all relevant per-dimension radiation amount settings will be overridden.",
 		"If set to false, Advanced Rocketry dimensions will use relevant per-dim radiation settings."})
 		public boolean solar_radiation_origin = false;
@@ -150,6 +150,15 @@ public class NCERConfig {
 		@Config.Comment({"How much the automatic radiation from black holes should be scaled.",
 		"1.0 = 100%"})
 		public double accretion_radiation_scale = 1.0;
+		
+		@Config.Comment({"If star-sourced radiation should take the distance from the star into account."})
+		public boolean solar_radiation_use_dist = false;
+		
+		@Config.Comment({"% shift for the effect of star distance.",
+			"1 == 100% and therefore no shift,"
+			+ "1.1 == 110% distance and reduced radiation,"
+			+ "0.9 == 90% distance and increased radiation."})
+		public final Double star_dist_scale = 1.0;
 		
 		@Config.Comment({"% shift for sky-origination radiation, framed as magnetic field strength.",
 			"1 == 100% and therefore no shift, 1.1 == 110% and increased radiation, 0.9 == 90% and reduced radiation."})

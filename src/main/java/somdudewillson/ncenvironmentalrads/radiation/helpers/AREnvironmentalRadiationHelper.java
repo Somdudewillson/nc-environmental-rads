@@ -206,6 +206,11 @@ public class AREnvironmentalRadiationHelper implements
 			rads *= NCERConfig.arSettings.solar_radiation_scale;
 		}
 		
+		//Scale star-sourced rads by distance
+		if (NCERConfig.arSettings.solar_radiation_use_dist) {
+			rads *= Math.pow(dim.getSolarOrbitalDistance()/100.0, 2.0)*NCERConfig.arSettings.star_dist_scale;
+		}
+		
 		return rads;
 	}
 	
