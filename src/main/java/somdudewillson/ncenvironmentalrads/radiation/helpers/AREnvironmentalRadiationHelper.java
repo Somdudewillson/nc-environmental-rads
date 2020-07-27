@@ -50,33 +50,11 @@ public class AREnvironmentalRadiationHelper implements
 		//If player is above the top height, we know environmental rads are at max
 		if (pos.getY() >= top_height) {return top_rads; }
 		
-		double air_absorption;
-		if (NCERConfig.dimSpecific.use_atmospheric_absorption.get(dimKey)) {
-			if (!galaxy.isDimensionCreated(dimID)) {
-				air_absorption = NCERConfig.dimSpecific.air_absorption.get(dimKey);
-			} else if (NCERConfig.arSettings.atmosphere_type_absorption.get(
-							galaxy.getDimensionProperties(dimID).getAtmosphere().getUnlocalizedName()) < 0) {
-				air_absorption = NCERConfig.dimSpecific.air_absorption.get("overworld");
-			} else {
-				air_absorption = NCERConfig.arSettings.atmosphere_type_absorption.get(
-						galaxy.getDimensionProperties(dimID).getAtmosphere().getUnlocalizedName());
-			}
-		} else {
-			air_absorption = 0.0;
-		}
-		
-		air_absorption = Math.max(air_absorption,0.0);
+		double air_absorption = getAirAbsorption(top_height, world);
 		
 		//If player has LoS to the sky, no occlusion checks are necessary
-		if (world.canSeeSky(pos)) {
-			double adjusted_air_absorption = air_absorption*
-					(galaxy.isDimensionCreated(dimID) ?
-							galaxy.getDimensionProperties(dimID).getAtmosphereDensity() :
-							1.0);
-			
-			adjusted_air_absorption = Math.max(adjusted_air_absorption,0.0);
-			
-			return top_rads * Math.pow((1-adjusted_air_absorption), (top_height-pos.getY()));
+		if (world.canSeeSky(pos)) {			
+			return top_rads * Math.pow((1-air_absorption), (top_height-pos.getY()));
 		}
 		
 		double bottom_rads = NCConfig.radiation_lowest_rate;
@@ -84,14 +62,11 @@ public class AREnvironmentalRadiationHelper implements
 		//If the player lacks LoS to the sky, loop down from the lowest block that does
 		//and compute absorbed radiation from block hardnesses
 		BlockPos projectPos = new BlockPos(pos.getX(), top_height-1, pos.getZ());
-		double remainingRads = top_rads;
-		
-		air_absorption = getAirAbsorption(top_height, world);
 		
 		int startingHeight = world.getHeight(pos.getX(), pos.getZ());
 		int airLayers = Math.max((top_height-startingHeight),0);
 		
-		remainingRads = top_rads * Math.pow((1-air_absorption), airLayers);
+		double remainingRads = top_rads * Math.pow((1-air_absorption), airLayers);
 		projectPos = new BlockPos(pos.getX(), startingHeight-1, pos.getZ());
 			
 		double rads = projectRadsFromPoint(projectPos, EnumFacing.DOWN, remainingRads,
@@ -260,6 +235,12 @@ public class AREnvironmentalRadiationHelper implements
 				NCERConfig.arSettings.accretion_radiation_scale;
 	}
 	
+	/**
+	 * 
+	 * @param altitude Currently UNUSED.
+	 * @param world
+	 * @return
+	 */
 	private double getAirAbsorption(int altitude, World world) {
 		int dimID = world.provider.getDimension();
 		String dimKey = world.provider.getDimensionType().getName();
