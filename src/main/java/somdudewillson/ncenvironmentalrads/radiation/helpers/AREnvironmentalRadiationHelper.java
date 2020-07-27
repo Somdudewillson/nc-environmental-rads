@@ -51,11 +51,17 @@ public class AREnvironmentalRadiationHelper implements
 		if (pos.getY() >= top_height) {return top_rads; }
 		
 		double air_absorption = getAirAbsorption(top_height, world);
-		
+
+		boolean is_raining = world.isRaining();
 		//If player has LoS to the sky, no occlusion checks are necessary
-		if (world.canSeeSky(pos)) {			
-			return top_rads * Math.pow((1-air_absorption), (top_height-pos.getY()));
+		if (world.canSeeSky(pos)) {
+			if (NCERConfig.dimSpecific.sky_alternate_rain.get(dimKey) && is_raining) {
+				return top_rads;
+			} else {
+				return top_rads * Math.pow((1-air_absorption), (top_height-pos.getY()));
+			}
 		}
+		if (NCERConfig.dimSpecific.sky_alternate_rain.get(dimKey) && is_raining) { return 0; }
 		
 		double bottom_rads = NCConfig.radiation_lowest_rate;
 		

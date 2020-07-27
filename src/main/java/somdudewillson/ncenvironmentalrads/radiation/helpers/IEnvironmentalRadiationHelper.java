@@ -102,6 +102,9 @@ public interface IEnvironmentalRadiationHelper {
 	    if (!NCERConfig.dimSpecific.sky_respect_daynight.containsKey(key)) {
 	    	NCERConfig.dimSpecific.sky_respect_daynight.put(key, false);
 	    }
+	    if (!NCERConfig.dimSpecific.sky_alternate_rain.containsKey(key)) {
+	    	NCERConfig.dimSpecific.sky_alternate_rain.put(key, false);
+	    }
 	    //-----
 	    
 	    //-----Bedrock-specific settings

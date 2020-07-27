@@ -25,7 +25,7 @@ public class DimensionConfigCommand extends CommandBase {
 				+ "(\"Get\")\n"
 				+ "(\"Set\" <environmental radiation enabled> <use atmospheric absorption> "
 				+ "<atmospheric absorption thickness>"
-				+ "<sky radiation enabled> <sky rads> <sky origin height> <respect day/night cycle>"
+				+ "<sky radiation enabled> <sky rads> <sky origin height> <respect day/night cycle> <alternate rain behavior>"
 				+ "<bedrock radiation enabled> <bedrock rads> <bedrock origin height>)/"
 				+ "(\"Remove\")\n"
 				+ "(\"Scan\")\n"
@@ -70,6 +70,10 @@ public class DimensionConfigCommand extends CommandBase {
 			settingsString += NCERConfig.dimSpecific.sky_respect_daynight.getOrDefault(dimKey, false);
 			settingsString += "\n";
 			
+			settingsString += "Sky radiation alternate behavior during rain: ";
+			settingsString += NCERConfig.dimSpecific.sky_alternate_rain.getOrDefault(dimKey, false);
+			settingsString += "\n";
+			
 			settingsString += "Bedrock radiation enabled: ";
 			settingsString += NCERConfig.dimSpecific.bedrock_radiation.getOrDefault(dimKey, false);
 			settingsString += "\n";
@@ -83,7 +87,7 @@ public class DimensionConfigCommand extends CommandBase {
 			
 			CommandUtils.sendInfo(sender,settingsString);
 			break;
-		case "remove"://Wipe biome rad settings
+		case "remove"://Wipe dim rad settings
 			NCERConfig.dimSpecific.environmental_radiation_enabled.remove(dimKey);
 			NCERConfig.dimSpecific.use_atmospheric_absorption.remove(dimKey);
 			
@@ -91,16 +95,17 @@ public class DimensionConfigCommand extends CommandBase {
 			NCERConfig.dimSpecific.sky_max_rads.remove(dimKey);
 			NCERConfig.dimSpecific.sky_origin_height.remove(dimKey);
 			NCERConfig.dimSpecific.sky_respect_daynight.remove(dimKey);
+			NCERConfig.dimSpecific.sky_alternate_rain.remove(dimKey);
 			
 			NCERConfig.dimSpecific.bedrock_radiation.remove(dimKey);
 			NCERConfig.dimSpecific.bedrock_max_rads.remove(dimKey);
 			NCERConfig.dimSpecific.bedrock_origin_height.remove(dimKey);
 			
 			ConfigManager.sync(EnvironmentalRads.MODID, Config.Type.INSTANCE);
-			CommandUtils.sendInfo(sender, "Config entry for "+dimKey+" removed;");
+			CommandUtils.sendInfo(sender, "Config entry for dimension '"+dimKey+"' removed;");
 			break;
 		case "set"://Set dimension rad settings
-			if (args.length != 10) { CommandUtils.sendError(sender, "Incorrect number of arguments.");return; }
+			if (args.length != 11) { CommandUtils.sendError(sender, "Incorrect number of arguments.");return; }
 			
 			double newVal;
 			int argI = 0;
@@ -187,6 +192,14 @@ public class DimensionConfigCommand extends CommandBase {
 			}
 			infoString += "Sky radiation respects day/night cycle: "+
 					NCERConfig.dimSpecific.sky_respect_daynight.get(dimKey)+"\n";
+			argI++;
+			
+			if (!args[argI].trim().equalsIgnoreCase("~")) {
+				NCERConfig.dimSpecific.sky_alternate_rain.put(dimKey,
+						CommandBase.parseBoolean(args[argI]));
+			}
+			infoString += "Sky radiation alternate behavior during rain: "+
+					NCERConfig.dimSpecific.sky_alternate_rain.get(dimKey)+"\n";
 			argI++;
 			//-----
 			

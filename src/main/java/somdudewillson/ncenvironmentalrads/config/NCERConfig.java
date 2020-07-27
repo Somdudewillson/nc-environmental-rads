@@ -78,6 +78,10 @@ public class NCERConfig {
 		@Config.Comment({"If dimensions will treat sky-sourced radiation as coming from the sun-",
 		"i.e. dependent on the day/night cycle."})
 		public final Map<String, Boolean> sky_respect_daynight = new HashMap<>();
+		
+		@Config.Comment({"If dimensions will alter the behavior of sky-sourced radiation during rain/snow.",
+		"Said alternate behavior is to ignore atmospheric absorption and make all solid blocks stop radiation."})
+		public final Map<String, Boolean> sky_alternate_rain = new HashMap<>();
 		//-----
 		
 		//-----Bedrock-related Settings
