@@ -208,7 +208,7 @@ public class AREnvironmentalRadiationHelper implements
 		
 		//Scale star-sourced rads by distance
 		if (NCERConfig.arSettings.solar_radiation_use_dist) {
-			rads *= Math.pow(dim.getSolarOrbitalDistance()/100.0, 2.0)*NCERConfig.arSettings.star_dist_scale;
+			rads *= 1/Math.pow((dim.getSolarOrbitalDistance()/100.0)*NCERConfig.arSettings.star_dist_scale, 2.0);
 		}
 		
 		return rads;
