@@ -265,7 +265,8 @@ public class DimensionConfigCommand extends CommandBase {
 					NCERConfig.dimSpecific.use_atmospheric_absorption.put(scannedKey, true);
 				}
 			}
-			
+
+			ConfigManager.sync(EnvironmentalRads.MODID, Config.Type.INSTANCE);
 			CommandUtils.sendInfo(sender,scanResult);
 			break;
 		default://Invalid action
