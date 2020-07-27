@@ -80,6 +80,6 @@ public class EnvironmentalRads
 		event.registerServerCommand(new BiomeConfigCommand());
 		event.registerServerCommand(new DimensionConfigCommand());
 
-		event.registerServerCommand(new DebugCommand());
+		//event.registerServerCommand(new DebugCommand());
 	}
 }
