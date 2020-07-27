@@ -12,7 +12,6 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import somdudewillson.ncenvironmentalrads.commands.BiomeConfigCommand;
 import somdudewillson.ncenvironmentalrads.commands.BlockConfigCommand;
-import somdudewillson.ncenvironmentalrads.commands.DebugCommand;
 import somdudewillson.ncenvironmentalrads.commands.DimensionConfigCommand;
 import somdudewillson.ncenvironmentalrads.proxy.CommonProxy;
 
