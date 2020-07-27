@@ -151,6 +151,10 @@ public class NCERConfig {
 		"1.0 = 100%"})
 		public double accretion_radiation_scale = 1.0;
 		
+		@Config.Comment({"% shift for sky-origination radiation, framed as magnetic field strength.",
+			"1 == 100% and therefore no shift, 1.1 == 110% and increased radiation, 0.9 == 90% and reduced radiation."})
+		public final Map<String, Double> magnetic_deflection = new HashMap<>();
+		
 		@Config.Comment({"Absorption % per block of air at 1 atm for each atmosphere type.",
 			"-1 will use calculated values for the overworld."})
 		public final Map<String, Double> atmosphere_type_absorption = new HashMap<>();

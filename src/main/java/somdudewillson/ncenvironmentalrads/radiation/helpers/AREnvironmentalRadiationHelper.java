@@ -45,6 +45,7 @@ public class AREnvironmentalRadiationHelper implements
 		} else {
 			top_rads = NCERConfig.dimSpecific.sky_max_rads.get(dimKey);
 		}
+		top_rads *= NCERConfig.arSettings.magnetic_deflection.getOrDefault(dimKey, 1.0);
 		top_rads = getAdjustedRadsFromSky(top_rads, biomeKey);
 		
 		//If player is above the top height, we know environmental rads are at max
@@ -173,6 +174,19 @@ public class AREnvironmentalRadiationHelper implements
 		}
 		
 		return dimKeys;
+	}
+	
+	@Override
+	public boolean tryAddNewDimension(String key) {
+		boolean result = IEnvironmentalRadiationHelper.super.tryAddNewDimension(key);
+		if (result) {
+			
+		    if (!NCERConfig.arSettings.magnetic_deflection.containsKey(key)) {
+		    	NCERConfig.arSettings.magnetic_deflection.put(key, new Double(1));
+		    }
+		    
+		}
+		return result;
 	}
 	
 	//==========Utility Functions
