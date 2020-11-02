@@ -108,7 +108,7 @@ public class DimensionConfigCommand extends CommandBase {
 			if (args.length != 12) { CommandUtils.sendError(sender, "Incorrect number of arguments.");return; }
 			
 			double newVal;
-			int argI = 0;
+			int argI = 1;
 			String infoString = "     Setting changes for: "+dimKey+"\n";
 			
 			//Environmental Radiation Enabled-ness
