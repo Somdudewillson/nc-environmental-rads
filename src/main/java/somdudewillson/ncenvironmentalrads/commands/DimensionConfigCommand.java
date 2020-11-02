@@ -105,7 +105,7 @@ public class DimensionConfigCommand extends CommandBase {
 			CommandUtils.sendInfo(sender, "Config entry for dimension '"+dimKey+"' removed;");
 			break;
 		case "set"://Set dimension rad settings
-			if (args.length != 11) { CommandUtils.sendError(sender, "Incorrect number of arguments.");return; }
+			if (args.length != 12) { CommandUtils.sendError(sender, "Incorrect number of arguments.");return; }
 			
 			double newVal;
 			int argI = 0;
