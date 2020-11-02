@@ -1,6 +1,7 @@
 package somdudewillson.ncenvironmentalrads.utils;
 
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
@@ -16,20 +17,23 @@ public class NameUtils {
 		return getBlockKey(itemBlockStack, itemBlock);
 	}
 	
-	public static String getBlockKey(ItemStack itemBlockStack, ItemBlock itemBlock) {
-		String name = itemBlock.getRegistryName().toString();
-		name += itemBlock.getUnlocalizedName(itemBlockStack)
-				.replaceAll("^"+(itemBlock.getUnlocalizedName().replaceAll(".", "\\.")), "");
+	public static String getBlockKey(ItemStack itemStack, Item item) {
+		String name = item.getRegistryName().toString();
+		name += getEscapedUnlocalizedName(itemStack,item);
 		
 		return name;
 	}
 	
 	public static String getBlockKey(World world, IBlockState state) {
+		Item stateItem = ItemBlock.getItemFromBlock(state.getBlock());
+		ItemStack itemStack = stateItem.getDefaultInstance();
+		itemStack.setItemDamage(state.getBlock().getMetaFromState(state));
 		
-		ItemBlock itemBlock = (ItemBlock) ItemBlock.getItemFromBlock(state.getBlock());
-		ItemStack itemBlockStack = itemBlock.getDefaultInstance();
-		itemBlockStack.setItemDamage(state.getBlock().getMetaFromState(state));
-		
-		return getBlockKey(itemBlockStack, itemBlock);
+		return getBlockKey(itemStack, stateItem);
+	}
+	
+	public static String getEscapedUnlocalizedName(ItemStack stack, Item item) {
+		return item.getUnlocalizedName(stack)
+				.replaceAll("^"+(item.getUnlocalizedName().replaceAll(".", "\\.")), "");
 	}
 }
