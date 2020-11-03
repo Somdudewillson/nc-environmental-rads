@@ -1,6 +1,8 @@
 package somdudewillson.ncenvironmentalrads.utils;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
@@ -26,6 +28,9 @@ public class NameUtils {
 	
 	public static String getBlockKey(World world, IBlockState state) {
 		Item stateItem = ItemBlock.getItemFromBlock(state.getBlock());
+		if (stateItem == Items.AIR) {
+			return state.getBlock().getUnlocalizedName();
+		}
 		ItemStack itemStack = stateItem.getDefaultInstance();
 		itemStack.setItemDamage(state.getBlock().getMetaFromState(state));
 		

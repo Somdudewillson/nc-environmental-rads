@@ -10,6 +10,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import somdudewillson.ncenvironmentalrads.EnvironmentalRads;
 import somdudewillson.ncenvironmentalrads.config.NCERConfig;
+import somdudewillson.ncenvironmentalrads.utils.NameUtils;
 
 public class DefaultEnvironmentalRadiationHelper implements
 		IEnvironmentalRadiationHelper {
@@ -109,7 +110,7 @@ public class DefaultEnvironmentalRadiationHelper implements
 				testPos.getY()!=targetPos.getY();testPos = testPos.offset(direction)) {
 			
 			debugStack += "\tLayer "+testPos.getY()+" ";
-			debugStack += "["+thisChunk.getBlockState(testPos).getBlock().getLocalizedName()+"] ";
+			debugStack += "["+NameUtils.getBlockKey(world, thisChunk.getBlockState(testPos))+"] ";
 			
 			if (thisChunk.getBlockState(testPos).getMaterial() == Material.AIR) {
 				//If it's air, apply air absorption
