@@ -8,6 +8,7 @@ import it.unimi.dsi.fastutil.ints.IntSortedSet;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.DimensionType;
 import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
@@ -165,7 +166,18 @@ public interface IEnvironmentalRadiationHelper {
 		if (NCERConfig.blockSettings.rad_absorption.containsKey(blockKey)) {
 			absorptionPercent = NCERConfig.blockSettings.rad_absorption.get(blockKey);
 		} else {
-			absorptionPercent = blockState.getBlockHardness(world, pos)*NCERConfig.percent_absorbed_per_hardness;
+			float hardness = 1.5f;//Fallback in case of unavailable block hardness.
+			
+			try {
+				hardness = blockState.getBlockHardness(world, pos);
+			} catch(Exception e) {
+				EnvironmentalRads.logger.error(
+						"Someone's getBlockHardness() method is broken!"+
+								"  (threw '"+e.getCause().toString()+"')  "
+								+"Using fallback hardness of 1.5...");
+			}
+			
+			absorptionPercent = hardness*NCERConfig.percent_absorbed_per_hardness;
 		}
 		
 //		System.out.println(blockKey+" absorbed "
