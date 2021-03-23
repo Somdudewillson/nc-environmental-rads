@@ -17,7 +17,7 @@ import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import somdudewillson.ncenvironmentalrads.EnvironmentalRads;
 import somdudewillson.ncenvironmentalrads.config.NCERConfig;
 import somdudewillson.ncenvironmentalrads.config.compat.ICompatConfigLoader;
-import somdudewillson.ncenvironmentalrads.radiation.EnvironmentalRadiationHandler;
+import somdudewillson.ncenvironmentalrads.radiation.PlayerEnvironmentalRadiationHandler;
 import somdudewillson.ncenvironmentalrads.radiation.helpers.DefaultEnvironmentalRadiationHelper;
 import somdudewillson.ncenvironmentalrads.radiation.helpers.IEnvironmentalRadiationHelper;
 
@@ -59,7 +59,7 @@ public class CommonProxy {
 		ConfigManager.sync(EnvironmentalRads.MODID, Config.Type.INSTANCE);
 		
 		//Register handler
-		MinecraftForge.EVENT_BUS.register(new EnvironmentalRadiationHandler(helper));
+		MinecraftForge.EVENT_BUS.register(new PlayerEnvironmentalRadiationHandler(helper));
 	}
 	
 	private void updateDimensions() {

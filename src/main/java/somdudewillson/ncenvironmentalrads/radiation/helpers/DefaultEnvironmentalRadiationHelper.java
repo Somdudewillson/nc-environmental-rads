@@ -7,7 +7,6 @@ import net.minecraft.block.material.Material;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraft.world.chunk.Chunk;
 import somdudewillson.ncenvironmentalrads.EnvironmentalRads;
 import somdudewillson.ncenvironmentalrads.config.NCERConfig;
 import somdudewillson.ncenvironmentalrads.utils.NameUtils;
@@ -98,7 +97,6 @@ public class DefaultEnvironmentalRadiationHelper implements
 		//-----Calculate initial variable values
 		int startingHeight = pos.getY();
 		double rads = sourceRads;
-		Chunk thisChunk = world.getChunkFromBlockCoords(pos);
 		//-----
 		
 		String debugStack = "\n----------\n";
@@ -110,13 +108,14 @@ public class DefaultEnvironmentalRadiationHelper implements
 				testPos.getY()!=targetPos.getY();testPos = testPos.offset(direction)) {
 			
 			debugStack += "\tLayer "+testPos.getY()+" ";
-			debugStack += "["+NameUtils.getBlockKey(world, thisChunk.getBlockState(testPos))+"] ";
+			debugStack += "["+NameUtils.getBlockKey(world, world.getBlockState(testPos))+"] ";
 			
-			if (thisChunk.getBlockState(testPos).getMaterial() == Material.AIR) {
+			if (world.getBlockState(testPos).getMaterial() == Material.AIR
+					|| world.isAirBlock(testPos)) {
 				//If it's air, apply air absorption
 				rads *= 1-air_absorption;
 			} else {
-				rads = getRadsThroughBlock(rads, thisChunk.getBlockState(testPos), world, targetPos);
+				rads = getRadsThroughBlock(rads, world.getBlockState(testPos), world, targetPos);
 			}
 			debugStack += rads+" rads\n";
 			

@@ -21,7 +21,7 @@ compileJava {
 }
 
 minecraft {
-    version = "1.12.2-14.23.5.2768"
+    version = "1.12.2-14.23.5.2847"
     runDir = "run"
     
     // the mappings can be changed at any time, and must be in the following format.
@@ -29,7 +29,7 @@ minecraft {
     // stable_#            stables are built at the discretion of the MCP team.
     // Use non-default mappings at your own risk. they may not always work.
     // simply re-run your setup task after changing the mappings to update your workspace.
-    mappings = "snapshot_20171003"
+    mappings = "stable_39"
     // makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
     makeObfSourceJar = true
 }
@@ -39,6 +39,10 @@ repositories {
         name = "CurseForge"
         url = "https://minecraft.curseforge.com/api/maven/"
     }
+    
+    flatDir {
+       dirs 'D:\\Ashan-Programs\\MCModding\\Reference Sources'
+   }
 	
 	dependencies {
 		// you may put jars on which you depend on in ./libs
@@ -62,8 +66,15 @@ repositories {
 		// http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
 		// http://www.gradle.org/docs/current/userguide/dependency_management.html
 		
-		deobfCompile "nuclearcraft-mod:NuclearCraft:2.18o:1.12.2"
-		//deobfProvided "advanced-rocketry:AdvancedRocketry:AdvancedRocketry-1.12.2-1.6.0-195-universal"
+		//deobfCompile "nuclearcraft-mod:NuclearCraft:2.18o:1.12.2"
+		//deobfProvided "advanced-rocketry:Advanced Rocketry:release"
+		
+		deobfCompile "nuclearcraft-mod:NuclearCraft-2.18o-1.12.2"
+		deobfCompile "nuclearcraft-mod:NuclearCraft-2.18o-1.12.2:sources"
+		//deobfCompile "nuclearcraft-mod:NuclearCraft-2o.4.7-1.12.2"
+		//deobfCompile "nuclearcraft-mod:NuclearCraft-2o.4.7-1.12.2:sources"
+		deobfProvided "advanced-rocketry:AdvancedRocketry-1.12.2-1.6.0-195:universal"
+		deobfProvided "advanced-rocketry:AdvancedRocketry-1.12.2-1.6.0-195:sources"
 	}
 
 	processResources {

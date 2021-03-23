@@ -16,7 +16,7 @@ import somdudewillson.ncenvironmentalrads.commands.DimensionConfigCommand;
 import somdudewillson.ncenvironmentalrads.proxy.CommonProxy;
 
 @Mod(modid = EnvironmentalRads.MODID, name = EnvironmentalRads.NAME, version = EnvironmentalRads.VERSION,
-		dependencies = "required-after:nuclearcraft;after:advancedrocketry;")
+		dependencies = "required-after:nuclearcraft;required-after:budcache;after:advancedrocketry;")
 public class EnvironmentalRads {
     public static final String MODID = "ncenvironmentalrads";
     public static final String NAME = "Environmental Rads : NuclearCraft Addon";

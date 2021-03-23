@@ -38,6 +38,9 @@ public class NCERConfig {
 	@Config.Name("% absorption per hardness")
 	public static double percent_absorbed_per_hardness = 0.01;
 	
+	@Config.Comment({"Grace period for new players before they are affected by environmental radiation."})
+	public static int grace_period_minutes = 0;
+	
 	@Config.Comment("If detailed debug logging outputs are enabled.  Only use for bug reports and similar.")
 	public static boolean debug_output = false;
 	

@@ -10,6 +10,7 @@ import nc.network.PacketHandler;
 import nc.network.radiation.PlayerRadsUpdatePacket;
 import nc.radiation.RadiationHelper;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.stats.StatList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
@@ -20,10 +21,10 @@ import somdudewillson.ncenvironmentalrads.EnvironmentalRads;
 import somdudewillson.ncenvironmentalrads.config.NCERConfig;
 import somdudewillson.ncenvironmentalrads.radiation.helpers.IEnvironmentalRadiationHelper;
 
-public class EnvironmentalRadiationHandler {
+public class PlayerEnvironmentalRadiationHandler {
 	private IEnvironmentalRadiationHelper helper;
 	
-	public EnvironmentalRadiationHandler(IEnvironmentalRadiationHelper helper) {
+	public PlayerEnvironmentalRadiationHandler(IEnvironmentalRadiationHelper helper) {
 		this.helper = helper;
 	}
 	
@@ -58,6 +59,8 @@ public class EnvironmentalRadiationHandler {
 			
 			//If environmental radiation is disabled in the current dimension, skip calculations
 			if (!NCERConfig.dimSpecific.environmental_radiation_enabled.getOrDefault(dimKey, false)) { return; }
+			//If the player is protected by the grace period, skip calculations
+			if (player.getStatFile().readStat(StatList.PLAY_ONE_MINUTE) <= NCERConfig.grace_period_minutes) { return; }
 			
 			IEntityRads playerRads = RadiationHelper.getEntityRadiation(player);
 			
